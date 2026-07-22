@@ -1,19 +1,21 @@
 ---
 colors:
-  primary: "oklch(0.6 0.14 255)"
-  bg-site: "oklch(0.17 0.02 255)"
-  bg-card: "oklch(0.23 0.02 260)"
-  text-body: "oklch(1 0 0)"
-  text-heading: "oklch(0.6 0.14 255)"
-  color-link: "oklch(0.45 0.18 35)"
-  color-icon: "oklch(0.3 0.06 255)"
-  color-border: "oklch(0.3 0.06 255)"
-  color-muted: "oklch(0.6 0.015 255)"
-  color-success: "oklch(0.6 0.15 150)"
-  color-error: "oklch(0.6 0.18 25)"
+  primary: 'oklch(0.6 0.14 255)'
+  bg-site: 'oklch(0.17 0.02 255)'
+  bg-card: 'oklch(0.23 0.02 260)'
+  text-body: 'oklch(1 0 0)'
+  text-heading: 'oklch(0.6 0.14 255)'
+  color-link: 'oklch(0.45 0.18 35)'
+  color-icon: 'oklch(0.3 0.06 255)'
+  color-border: 'oklch(0.3 0.06 255)'
+  color-muted: 'oklch(0.6 0.015 255)'
+  color-success: 'oklch(0.6 0.15 150)'
+  color-error: 'oklch(0.6 0.18 25)'
 typography:
-  font-body: "system-ui, -apple-system, sans-serif"
+  font-body: "'Geist', system-ui, -apple-system, sans-serif"
+  font-mono: "'Geist Mono', ui-monospace, SFMono-Regular, monospace"
 ---
+
 # GitWarp Design System
 
 This document is the single source of truth for the GitWarp design system. It contains all core design tokens used in the application.
@@ -36,4 +38,5 @@ The application relies strictly on the following OKLCH palette defined in `src/s
 
 ## Typography
 
-- **Body**: `system-ui, -apple-system, sans-serif` — Lean heavily on the host OS native sans-serif font stack.
+- **Body**: `Geist, system-ui, -apple-system, sans-serif` — Using Geist for modern readability, falling back to host OS native sans-serif.
+- **Mono**: `Geist Mono, ui-monospace, SFMono-Regular, monospace` — Using Geist Mono for code snippets and technical text.

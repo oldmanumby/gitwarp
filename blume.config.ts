@@ -27,9 +27,9 @@ export default defineConfig({
           document.head.appendChild(style);
           localStorage.setItem('blume-theme', 'dark');
           document.documentElement.dataset.theme = 'dark';
-        `
-      }
-    ]
+        `,
+      },
+    ],
   },
   navigation: {
     featured: [{ href: '../', label: 'Back to GitWarp' }],
