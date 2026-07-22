@@ -140,47 +140,86 @@ function renderStandardCards(parsedContext) {
     return;
   }
 
-  STANDARD_CARDS.forEach(card => {
-    const compatible = isCardCompatible(card, parsedContext);
-    const targetUrl = compatible ? getCardUrl(card, parsedContext) : null;
-    
-    const cardEl = document.createElement('div');
-    cardEl.className = `card glass ${compatible ? 'active' : 'disabled'}`;
-    cardEl.setAttribute('data-card-id', card.id);
-
-    if (compatible && targetUrl) {
-      cardEl.innerHTML = `
-        <div class="card-icon">
-          <i data-lucide="${escapeHtml(card.icon)}"></i>
-        </div>
-        <h3 class="card-title">${escapeHtml(card.name)}</h3>
-        <div class="card-link-container">
-          <a href="${escapeHtml(targetUrl)}" target="_blank" rel="noopener noreferrer" class="card-link" title="${escapeHtml(targetUrl)}">
-            ${escapeHtml(targetUrl.replace('https://', ''))}
-          </a>
-          <button class="copy-btn" data-url="${escapeHtml(targetUrl)}" aria-label="Copy ${escapeHtml(card.name)} link">
-            <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
-          </button>
-        </div>
-        <p class="card-description">${escapeHtml(card.description)}</p>
-      `;
-    } else {
-      cardEl.innerHTML = `
-        <div class="card-icon">
-          <i data-lucide="${escapeHtml(card.icon)}"></i>
-        </div>
-        <h3 class="card-title">${escapeHtml(card.name)}</h3>
-        <div class="card-link-container" style="opacity: 0.5;">
-          <span class="card-link" style="color: var(--color-error); font-style: italic;">Requires ${escapeHtml(card.allowedContexts.join('/'))} context</span>
-          <button class="copy-btn" data-url="" disabled aria-label="Copy ${escapeHtml(card.name)} link">
-            <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
-          </button>
-        </div>
-        <p class="card-description">${escapeHtml(card.description)}</p>
-      `;
+  const categories = [
+    {
+      title: 'Cloud IDEs & Dev Environments',
+      ids: ['githubdev', 'github1s', 'vscode_dev', 'codespaces_new', 'gitpod_io', 'stackblitz']
+    },
+    {
+      title: 'AI & LLM Utilities',
+      ids: ['boltnew', 'gitingest', 'gitmcp', 'deepwiki', 'gitpodcast']
+    },
+    {
+      title: 'Analytics & Visualization',
+      ids: ['gitdiagram', 'githubgg', 'starhistory']
+    },
+    {
+      title: 'Git Operations & Raw Data',
+      ids: ['patch', 'diff', 'raw_file', 'ssh_clone', 'zip_archive']
+    },
+    {
+      title: 'Feeds & User Identity',
+      ids: ['releases_atom', 'commits_atom', 'keys', 'gpg']
     }
+  ];
 
-    cardsGrid.appendChild(cardEl);
+  categories.forEach((category, index) => {
+    const categoryHeader = document.createElement('div');
+    categoryHeader.style.gridColumn = '1 / -1';
+    categoryHeader.style.textAlign = 'center';
+    
+    const hrHtml = index === 0 ? '' : '<hr class="section-divider" style="margin-top: 2rem; margin-bottom: 2rem;" />';
+    categoryHeader.innerHTML = `
+      ${hrHtml}
+      <h2 style="margin-bottom: 1rem;">${escapeHtml(category.title)}</h2>
+    `;
+    cardsGrid.appendChild(categoryHeader);
+
+    category.ids.forEach(cardId => {
+      const card = STANDARD_CARDS.find(c => c.id === cardId);
+      if (!card) return;
+
+      const compatible = isCardCompatible(card, parsedContext);
+      const targetUrl = compatible ? getCardUrl(card, parsedContext) : null;
+      
+      const cardEl = document.createElement('div');
+      cardEl.className = \`card glass \${compatible ? 'active' : 'disabled'}\`;
+      cardEl.setAttribute('data-card-id', card.id);
+
+      if (compatible && targetUrl) {
+        cardEl.innerHTML = \`
+          <div class="card-icon">
+            <i data-lucide="\${escapeHtml(card.icon)}"></i>
+          </div>
+          <h3 class="card-title">\${escapeHtml(card.name)}</h3>
+          <div class="card-link-container">
+            <a href="\${escapeHtml(targetUrl)}" target="_blank" rel="noopener noreferrer" class="card-link" title="\${escapeHtml(targetUrl)}">
+              \${escapeHtml(targetUrl.replace('https://', ''))}
+            </a>
+            <button class="copy-btn" data-url="\${escapeHtml(targetUrl)}" aria-label="Copy \${escapeHtml(card.name)} link">
+              <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
+            </button>
+          </div>
+          <p class="card-description">\${escapeHtml(card.description)}</p>
+        \`;
+      } else {
+        cardEl.innerHTML = \`
+          <div class="card-icon">
+            <i data-lucide="\${escapeHtml(card.icon)}"></i>
+          </div>
+          <h3 class="card-title">\${escapeHtml(card.name)}</h3>
+          <div class="card-link-container" style="opacity: 0.5;">
+            <span class="card-link" style="color: var(--color-error); font-style: italic;">Requires \${escapeHtml(card.allowedContexts.join('/'))} context</span>
+            <button class="copy-btn" data-url="" disabled aria-label="Copy \${escapeHtml(card.name)} link">
+              <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
+            </button>
+          </div>
+          <p class="card-description">\${escapeHtml(card.description)}</p>
+        \`;
+      }
+
+      cardsGrid.appendChild(cardEl);
+    });
   });
 }
 
