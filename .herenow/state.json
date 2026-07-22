@@ -11,6 +11,12 @@
       "claimToken": "7a480e374a5aa177ed3b4f7d77ba356df2764d0f0fb4f7fe2953d06c7b3e0490",
       "claimUrl": "https://here.now/claim?slug=swift-crystal-n5bg&token=7a480e374a5aa177ed3b4f7d77ba356df2764d0f0fb4f7fe2953d06c7b3e0490",
       "expiresAt": "2026-07-23T07:22:49.114Z"
+    },
+    "boreal-pillar-9362": {
+      "siteUrl": "https://boreal-pillar-9362.here.now/",
+      "claimToken": "7a4e74fbd6ee92cdb5a0f5f8a0b29e207f6354ceb1d80c952416ebf846fedb63",
+      "claimUrl": "https://here.now/claim?slug=boreal-pillar-9362&token=7a4e74fbd6ee92cdb5a0f5f8a0b29e207f6354ceb1d80c952416ebf846fedb63",
+      "expiresAt": "2026-07-23T13:43:22.214Z"
     }
   }
 }

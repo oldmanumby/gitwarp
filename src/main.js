@@ -183,40 +183,41 @@ function renderStandardCards(parsedContext) {
       const targetUrl = compatible ? getCardUrl(card, parsedContext) : null;
       
       const cardEl = document.createElement('div');
-      cardEl.className = \`card glass \${compatible ? 'active' : 'disabled'}\`;
+      cardEl.className = `card glass ${compatible ? 'active' : 'disabled'}`;
       cardEl.setAttribute('data-card-id', card.id);
 
       if (compatible && targetUrl) {
-        cardEl.innerHTML = \`
+        cardEl.innerHTML = `
           <div class="card-icon">
-            <i data-lucide="\${escapeHtml(card.icon)}"></i>
+            <i data-lucide="${escapeHtml(card.icon)}"></i>
           </div>
-          <h3 class="card-title">\${escapeHtml(card.name)}</h3>
+          <h3 class="card-title">${escapeHtml(card.name)}</h3>
           <div class="card-link-container">
-            <a href="\${escapeHtml(targetUrl)}" target="_blank" rel="noopener noreferrer" class="card-link" title="\${escapeHtml(targetUrl)}">
-              \${escapeHtml(targetUrl.replace('https://', ''))}
+            <a href="${escapeHtml(targetUrl)}" target="_blank" rel="noopener noreferrer" class="card-link" title="${escapeHtml(targetUrl)}">
+              ${escapeHtml(targetUrl.replace('https://', ''))}
             </a>
-            <button class="copy-btn" data-url="\${escapeHtml(targetUrl)}" aria-label="Copy \${escapeHtml(card.name)} link">
+            <button class="copy-btn" data-url="${escapeHtml(targetUrl)}" aria-label="Copy ${escapeHtml(card.name)} link">
               <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
             </button>
           </div>
-          <p class="card-description">\${escapeHtml(card.description)}</p>
-        \`;
+          <p class="card-description">${escapeHtml(card.description)}</p>
+        `;
       } else {
-        cardEl.innerHTML = \`
+        cardEl.innerHTML = `
           <div class="card-icon">
-            <i data-lucide="\${escapeHtml(card.icon)}"></i>
+            <i data-lucide="${escapeHtml(card.icon)}"></i>
           </div>
-          <h3 class="card-title">\${escapeHtml(card.name)}</h3>
+          <h3 class="card-title">${escapeHtml(card.name)}</h3>
           <div class="card-link-container" style="opacity: 0.5;">
-            <span class="card-link" style="color: var(--color-error); font-style: italic;">Requires \${escapeHtml(card.allowedContexts.join('/'))} context</span>
-            <button class="copy-btn" data-url="" disabled aria-label="Copy \${escapeHtml(card.name)} link">
+            <span class="card-link" style="color: var(--color-error); font-style: italic;">Requires ${escapeHtml(card.allowedContexts.join('/'))} context</span>
+            <button class="copy-btn" data-url="" disabled aria-label="Copy ${escapeHtml(card.name)} link">
               <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
             </button>
           </div>
-          <p class="card-description">\${escapeHtml(card.description)}</p>
-        \`;
+          <p class="card-description">${escapeHtml(card.description)}</p>
+        `;
       }
+
 
       cardsGrid.appendChild(cardEl);
     });
