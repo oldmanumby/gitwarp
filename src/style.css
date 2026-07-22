@@ -22,8 +22,8 @@
   --color-success: oklch(0.6 0.15 150); /* Greenish for success toast */
   --color-error: oklch(0.6 0.18 25); /* Reddish for errors */
 
-  --font-body: "Geist", system-ui, -apple-system, sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-body: 'Geist', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, monospace;
 }
 
 *,
