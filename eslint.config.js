@@ -12,7 +12,7 @@
 import js from '@eslint/js';
 
 export default [
-  { ignores: ['dist/'] },
+  { ignores: ['dist/', 'docs_temp/', 'docs/', 'test-blume.js'] },
   js.configs.recommended,
   {
     languageOptions: {
