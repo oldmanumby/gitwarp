@@ -338,6 +338,193 @@ a:hover {
   margin-bottom: 1.5rem;
 }
 
+/* Interactive Cards Layout */
+.interactive-section-title {
+  grid-column: 1 / -1;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.interactive-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  width: 100%;
+  grid-column: 1 / -1;
+}
+
+.card-interactive {
+  grid-column: 1 / -1;
+  text-align: left;
+  align-items: stretch;
+  padding: 1.75rem;
+}
+
+.card-interactive.disabled {
+  opacity: 0.7;
+}
+
+.card-interactive.disabled .interactive-controls {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-header-text {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.context-badge-wrapper {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.context-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.context-badge.active {
+  background-color: oklch(0.35 0.14 150);
+  color: oklch(0.98 0.02 150);
+}
+
+.context-badge.inactive, .context-badge.context-unknown {
+  background-color: oklch(0.25 0.03 255);
+  color: oklch(0.65 0.02 255);
+}
+
+.context-badge.context-user {
+  background-color: oklch(0.35 0.14 280);
+  color: oklch(0.98 0.02 280);
+}
+
+.context-badge.context-repo {
+  background-color: oklch(0.35 0.14 230);
+  color: oklch(0.98 0.02 230);
+}
+
+.context-badge.context-file {
+  background-color: oklch(0.35 0.14 150);
+  color: oklch(0.98 0.02 150);
+}
+
+.context-badge.context-commit {
+  background-color: oklch(0.35 0.14 60);
+  color: oklch(0.98 0.02 60);
+}
+
+.context-badge.context-pr {
+  background-color: oklch(0.35 0.14 320);
+  color: oklch(0.98 0.02 320);
+}
+
+.card.disabled {
+  opacity: 0.55;
+  filter: grayscale(0.2);
+}
+
+.card.disabled .copy-btn {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.context-notice {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.6rem 0.8rem;
+  border-radius: 4px;
+  border-left: 3px solid var(--color-border);
+  margin: 0.5rem 0 1rem;
+}
+
+.interactive-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.25rem 0;
+  padding: 1rem;
+  background: var(--bg-site);
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1 1 200px;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  font-weight: 500;
+}
+
+.interactive-input, .interactive-select {
+  padding: 0.6rem 0.8rem;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+  background-color: var(--bg-card);
+  color: var(--text-body);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.interactive-input:focus, .interactive-select:focus {
+  border-color: var(--text-heading);
+}
+
+.checkbox-group {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 1.5rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-body);
+}
+
+.interactive-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--text-heading);
+  cursor: pointer;
+}
+
+.interactive-output {
+  justify-content: space-between;
+  width: 100%;
+}
+
 @media (max-width: 768px) {
   .input-wrapper {
     flex-direction: column;

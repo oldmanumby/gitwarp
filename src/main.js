@@ -14,183 +14,92 @@ import {
   Copy, 
   CheckCircle, 
   X,
-  PlusCircle
+  PlusCircle,
+  Sliders,
+  History,
+  GitCommit,
+  Key,
+  ShieldCheck,
+  FileDiff,
+  Rss,
+  Archive,
+  Terminal,
+  Box
 } from 'lucide';
+import { parseGithubUrl } from './parser.js';
+import { STANDARD_CARDS, isCardCompatible, getCardUrl } from './cards.js';
+import { renderInteractiveCards } from './interactive.js';
 import './style.css';
 
-// Initialize Lucide icons on page load
-createIcons({ 
-  icons: {
-    FileText, 
-    Code, 
-    Eye, 
-    Server, 
-    GitMerge, 
-    BookOpen, 
-    LayoutDashboard, 
-    Zap, 
-    Bot, 
-    Headphones, 
-    Star,
-    Copy, 
-    CheckCircle, 
-    X,
-    PlusCircle
-  } 
-});
+// Pure HTML escaping helper function
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
-// Services Data
-const services = [
-  {
-    id: 'boltnew',
-    name: 'bolt.new',
-    icon: 'bot',
-    template: 'https://bolt.new/github.com/{repoPath}',
-    description: 'Imports the entire repo into an AI builder, agent standing by to edit & ship.'
-  },
-  {
-    id: 'deepwiki',
-    name: 'deepwiki.com',
-    icon: 'book-open',
-    template: 'https://deepwiki.com/{repoPath}',
-    description: 'Auto-generates a Wikipedia-style wiki + an Ask box that answers questions and cites files.'
-  },
-  {
-    id: 'gitdiagram',
-    name: 'gitdiagram.com',
-    icon: 'git-merge',
-    template: 'https://gitdiagram.com/{repoPath}',
-    description: 'Reads the repo and draws an interactive architecture diagram.'
-  },
-  {
-    id: 'gitingest',
-    name: 'gitingest',
-    icon: 'file-text',
-    template: 'https://gitingest.com/{repoPath}',
-    description: 'Flattens the WHOLE repo into one prompt-friendly text + token count. Best for asking AI.'
-  },
-  {
-    id: 'githubdev',
-    name: 'github.dev',
-    icon: 'code',
-    template: 'https://github.dev/{repoPath}',
-    description: 'Opens the repo in a full VS Code editor in your browser. (Same as pressing ".")'
-  },
-  {
-    id: 'githubgg',
-    name: 'github.gg',
-    icon: 'layout-dashboard',
-    template: 'https://github.gg/{repoPath}',
-    description: 'A control panel for the repo: one-click copy-for-AI, security scan, quality score.'
-  },
-  {
-    id: 'github1s',
-    name: 'github1s.com',
-    icon: 'eye',
-    template: 'https://github1s.com/{repoPath}',
-    description: 'VS Code view, classic flavor. Best for reading an unfamiliar codebase fast.'
-  },
-  {
-    id: 'gitmcp',
-    name: 'gitmcp.io',
-    icon: 'server',
-    template: 'https://gitmcp.io/{repoPath}',
-    description: 'Turns the repo into a live MCP server your AI can query in real time.'
-  },
-  {
-    id: 'gitpodcast',
-    name: 'gitpodcast.com',
-    icon: 'headphones',
-    template: 'https://gitpodcast.com/{repoPath}',
-    description: 'Turns a repo into an audio podcast — two hosts explaining the project.'
-  },
-  {
-    id: 'stackblitz',
-    name: 'stackblitz.com',
-    icon: 'zap',
-    template: 'https://stackblitz.com/github/{repoPath}',
-    description: 'Boots the project in a real, working dev environment in your browser.'
-  },
-  {
-    id: 'starhistory',
-    name: 'star-history.com',
-    icon: 'star',
-    template: 'https://star-history.com/#{repoPath}&Date',
-    description: 'Charts the repo’s stars over time. Steady climb = healthy; flat/cliff = careful.'
+// Safe Lucide icons initializer
+function safeCreateIcons() {
+  if (typeof window !== 'undefined') {
+    try {
+      window.lucide?.createIcons?.();
+    } catch {
+      // Ignore icon errors in headless/test envs
+    }
   }
-];
+  try {
+    createIcons({ 
+      icons: {
+        FileText, 
+        Code, 
+        Eye, 
+        Server, 
+        GitMerge, 
+        BookOpen, 
+        LayoutDashboard, 
+        Zap, 
+        Bot, 
+        Headphones, 
+        Star,
+        Copy, 
+        CheckCircle, 
+        X,
+        PlusCircle,
+        Sliders,
+        History,
+        GitCommit,
+        Key,
+        ShieldCheck,
+        FileDiff,
+        Rss,
+        Archive,
+        Terminal,
+        Box
+      } 
+    });
+  } catch {
+    // Ignore icon errors
+  }
+}
 
 // Elements
 const repoInput = document.getElementById('repo-input');
 const clearBtn = document.getElementById('clear-btn');
 const errorMessage = document.getElementById('error-message');
-const cardsContainer = document.getElementById('cards-container');
+const contextBadge = document.getElementById('context-badge');
+const cardsGrid = document.getElementById('cards-grid');
+const interactiveContainer = document.getElementById('interactive-container');
+const toast = document.getElementById('toast');
 
-// Create Toast Element
-const toast = document.createElement('div');
-toast.className = 'toast';
-toast.innerHTML = `<i data-lucide="check-circle"></i> Copied to clipboard!`;
-document.body.appendChild(toast);
 let toastTimeout;
-
-// Regex to extract owner/repo
-const githubRegex = /^(?:https?:\/\/)?(?:www\.)?github\.com\/([a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+)\/?.*$/;
-
-function renderCards(repoPath = '') {
-  cardsContainer.innerHTML = '';
-  
-  if (!repoPath) {
-    // Render placeholders or empty state
-    cardsContainer.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--color-muted); padding: 3rem;">Enter a GitHub repository URL above to see available superpowers.</div>`;
-    return;
-  }
-
-  services.forEach(service => {
-    const url = service.template.replace('{repoPath}', repoPath);
-    
-    const card = document.createElement('div');
-    card.className = 'card glass';
-    
-    card.innerHTML = `
-      <div class="card-icon">
-        <i data-lucide="${service.icon}"></i>
-      </div>
-      <h3 class="card-title">${service.name}</h3>
-      <div class="card-link-container">
-        <a href="${url}" target="_blank" rel="noopener noreferrer" class="card-link" title="${url}">
-          ${url.replace('https://', '')}
-        </a>
-        <button class="copy-btn" data-url="${url}" aria-label="Copy ${service.name} link">
-          <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
-        </button>
-      </div>
-      <p class="card-description">${service.description}</p>
-    `;
-    
-    cardsContainer.appendChild(card);
-  });
-  
-  // Re-initialize icons for new DOM elements
-  createIcons({ 
-    icons: {
-      FileText, Code, Eye, Server, GitMerge, BookOpen, LayoutDashboard, Zap, Bot, Headphones, Star, Copy, CheckCircle, X, PlusCircle
-    } 
-  });
-
-  // Add copy listeners
-  document.querySelectorAll('.copy-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const url = e.currentTarget.getAttribute('data-url');
-      navigator.clipboard.writeText(url).then(() => {
-        showToast();
-      }).catch(err => {
-        console.error('Failed to copy: ', err);
-      });
-    });
-  });
-}
-
-function showToast() {
+function showToast(message = 'Copied to clipboard!') {
+  if (!toast) return;
+  const textSpan = toast.querySelector('span');
+  if (textSpan) textSpan.textContent = message;
   toast.classList.add('show');
   clearTimeout(toastTimeout);
   toastTimeout = setTimeout(() => {
@@ -198,44 +107,145 @@ function showToast() {
   }, 2500);
 }
 
-function handleInput() {
-  const value = repoInput.value.trim();
-  errorMessage.textContent = '';
+function updateContextBadge(parsedContext) {
+  if (!contextBadge) return;
+  const contextName = (parsedContext && parsedContext.valid && parsedContext.context !== 'Unknown')
+    ? parsedContext.context
+    : 'Unknown';
+
+  contextBadge.textContent = contextName;
+  const lowerCtx = contextName.toLowerCase();
   
-  if (!value) {
-    renderCards('');
-    return;
-  }
-  
-  const match = value.match(githubRegex);
-  
-  if (match && match[1]) {
-    // Valid GitHub URL
-    let repoPath = match[1];
-    // Remove .git if present at the end
-    if (repoPath.endsWith('.git')) {
-        repoPath = repoPath.slice(0, -4);
-    }
-    renderCards(repoPath);
+  if (contextName !== 'Unknown') {
+    contextBadge.className = `context-badge active context-${lowerCtx}`;
   } else {
-    // Invalid URL format
-    errorMessage.textContent = 'Please enter a valid GitHub repository URL (e.g., https://github.com/owner/repo)';
-    renderCards('');
+    contextBadge.className = 'context-badge context-unknown inactive';
   }
 }
 
-// Event Listeners
-repoInput.addEventListener('input', handleInput);
-repoInput.addEventListener('paste', () => {
-  // Use timeout to let paste complete before evaluating
-  setTimeout(handleInput, 10);
+function renderStandardCards(parsedContext) {
+  if (!cardsGrid) return;
+  cardsGrid.innerHTML = '';
+
+  const isValid = Boolean(parsedContext && parsedContext.valid && parsedContext.context !== 'Unknown');
+
+  if (!isValid) {
+    cardsGrid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; color: var(--color-muted); padding: 3rem;">
+        Enter a valid GitHub URL above to see available super-swaps.
+      </div>
+    `;
+    return;
+  }
+
+  STANDARD_CARDS.forEach(card => {
+    const compatible = isCardCompatible(card, parsedContext);
+    const targetUrl = compatible ? getCardUrl(card, parsedContext) : null;
+    
+    const cardEl = document.createElement('div');
+    cardEl.className = `card glass ${compatible ? 'active' : 'disabled'}`;
+    cardEl.setAttribute('data-card-id', card.id);
+
+    if (compatible && targetUrl) {
+      cardEl.innerHTML = `
+        <div class="card-icon">
+          <i data-lucide="${escapeHtml(card.icon)}"></i>
+        </div>
+        <h3 class="card-title">${escapeHtml(card.name)}</h3>
+        <div class="card-link-container">
+          <a href="${escapeHtml(targetUrl)}" target="_blank" rel="noopener noreferrer" class="card-link" title="${escapeHtml(targetUrl)}">
+            ${escapeHtml(targetUrl.replace('https://', ''))}
+          </a>
+          <button class="copy-btn" data-url="${escapeHtml(targetUrl)}" aria-label="Copy ${escapeHtml(card.name)} link">
+            <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
+          </button>
+        </div>
+        <p class="card-description">${escapeHtml(card.description)}</p>
+      `;
+    } else {
+      cardEl.innerHTML = `
+        <div class="card-icon">
+          <i data-lucide="${escapeHtml(card.icon)}"></i>
+        </div>
+        <h3 class="card-title">${escapeHtml(card.name)}</h3>
+        <div class="card-link-container" style="opacity: 0.5;">
+          <span class="card-link" style="color: var(--color-muted); font-style: italic;">Requires ${escapeHtml(card.allowedContexts.join('/'))} context</span>
+          <button class="copy-btn" data-url="" disabled aria-label="Copy ${escapeHtml(card.name)} link">
+            <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
+          </button>
+        </div>
+        <p class="card-description">${escapeHtml(card.description)}</p>
+      `;
+    }
+
+    cardsGrid.appendChild(cardEl);
+  });
+}
+
+function handleInput() {
+  const value = repoInput ? repoInput.value.trim() : '';
+  const parsedCtx = parseGithubUrl(value);
+
+  if (errorMessage) {
+    if (!value) {
+      errorMessage.textContent = '';
+    } else if (!parsedCtx.valid) {
+      errorMessage.textContent = 'Please enter a valid GitHub URL (e.g., https://github.com/owner/repo)';
+    } else {
+      errorMessage.textContent = '';
+    }
+  }
+
+  updateContextBadge(parsedCtx);
+  renderStandardCards(parsedCtx);
+
+  if (interactiveContainer) {
+    renderInteractiveCards(interactiveContainer, parsedCtx);
+  }
+
+  safeCreateIcons();
+}
+
+// Event Listeners for URL Input
+if (repoInput) {
+  ['input', 'paste', 'keyup'].forEach(eventType => {
+    repoInput.addEventListener(eventType, () => {
+      handleInput();
+      if (eventType === 'paste') {
+        setTimeout(handleInput, 10);
+      }
+    });
+  });
+}
+
+// Clear Button Handler
+if (clearBtn) {
+  clearBtn.addEventListener('click', () => {
+    if (repoInput) repoInput.value = '';
+    handleInput();
+    if (repoInput) repoInput.focus();
+  });
+}
+
+// Global Copy Event Delegation for Toast Notifications
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.copy-btn');
+  if (!btn || btn.hasAttribute('disabled')) return;
+  const url = btn.getAttribute('data-url');
+  if (url) {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(() => {
+        showToast();
+      }).catch(() => {
+        showToast();
+      });
+    } else {
+      showToast();
+    }
+  }
 });
 
-clearBtn.addEventListener('click', () => {
-  repoInput.value = '';
-  handleInput();
-  repoInput.focus();
-});
+// Initial Render
+safeCreateIcons();
+handleInput();
 
-// Initial render
-renderCards('');

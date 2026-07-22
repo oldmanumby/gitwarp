@@ -1,0 +1,16 @@
+{
+  "publishes": {
+    "presto-onyx-pw92": {
+      "siteUrl": "https://presto-onyx-pw92.here.now/",
+      "claimToken": "7043ad9920bade50bdd8227fe44dfbb8374f5ff827c4ea8d83ee8b84de281c91",
+      "claimUrl": "https://here.now/claim?slug=presto-onyx-pw92&token=7043ad9920bade50bdd8227fe44dfbb8374f5ff827c4ea8d83ee8b84de281c91",
+      "expiresAt": "2026-07-23T07:16:40.561Z"
+    },
+    "swift-crystal-n5bg": {
+      "siteUrl": "https://swift-crystal-n5bg.here.now/",
+      "claimToken": "7a480e374a5aa177ed3b4f7d77ba356df2764d0f0fb4f7fe2953d06c7b3e0490",
+      "claimUrl": "https://here.now/claim?slug=swift-crystal-n5bg&token=7a480e374a5aa177ed3b4f7d77ba356df2764d0f0fb4f7fe2953d06c7b3e0490",
+      "expiresAt": "2026-07-23T07:22:49.114Z"
+    }
+  }
+}

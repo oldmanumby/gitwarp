@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>gitswapForged</title>
   </head>
@@ -18,18 +18,26 @@
     <main class="main-container">
       <section class="input-section glass">
         <h2>Enter GitHub Repository</h2>
-        <p>Paste a full GitHub repo URL below to generate your swapped links.</p>
+        <p>Paste a full GitHub URL below to generate your swapped links.</p>
         <div class="input-wrapper">
           <input type="text" id="repo-input" placeholder="https://github.com/owner/repo" autocomplete="off" />
           <button id="clear-btn" class="btn btn-primary btn-icon" aria-label="Clear input">
             <i data-lucide="x"></i>
           </button>
         </div>
+        <div class="context-badge-wrapper">
+          <span>Detected Context:</span>
+          <span id="context-badge" class="context-badge context-unknown inactive">Unknown</span>
+        </div>
         <p id="error-message" class="error-message"></p>
       </section>
 
-      <section class="cards-section" id="cards-container">
+      <section class="cards-section" id="cards-grid">
         <!-- Cards will be dynamically injected here by JS -->
+      </section>
+
+      <section id="interactive-container">
+        <!-- Interactive Cards will be dynamically injected here by JS -->
       </section>
 
       <hr class="section-divider" />
@@ -42,6 +50,10 @@
         </a>
       </section>
     </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite">
+      <i data-lucide="check-circle"></i> <span>Copied to clipboard!</span>
+    </div>
 
     <footer class="bottom-menu">
       <div class="footer-container">
