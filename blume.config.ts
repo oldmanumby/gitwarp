@@ -4,13 +4,13 @@ export default defineConfig({
   title: 'GitWarp',
   description: 'Documentation for the GitWarp URL manipulation toolkit.',
   theme: {
-    accent: 'oklch(0.6 0.14 255)',
-    background: 'oklch(0.17 0.02 255)',
+    accent: '#4081d2',
+    background: '#091018',
     mode: 'dark'
   },
   navigation: {
     featured: [
-      { href: "/", label: "Back to GitWarp" }
+      { href: "../", label: "Back to GitWarp" }
     ]
   }
 });

@@ -11,6 +11,7 @@
         "@eslint/js": "^10.0.1",
         "ajv": "^8.20.0",
         "blume": "^1.1.3",
+        "colorjs.io": "^0.7.0",
         "eslint": "^10.7.0",
         "fallow": "^3.7.1",
         "husky": "^9.1.7",
@@ -768,6 +769,8 @@
     "color-convert": ["color-convert@1.9.3", "", { "dependencies": { "color-name": "1.1.3" } }, "sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg=="],
 
     "color-name": ["color-name@1.1.3", "", {}, "sha512-72fSenhMw2HZMTVHeCA9KCmpEIbzWiQsjN+BHcBbS9vr1mtt+vJjPdksIBNUmKAW8TFUDPJK5SUU3QhE9NEXDw=="],
+
+    "colorjs.io": ["colorjs.io@0.7.0", "", {}, "sha512-JfLy3aZW1Xp2iwSFzGlLn0XSMnIdItH3BmzsXtwHVFEWwVUJIwKBWNzjQq2Tgf3998OY7qW2R6klrlYo8vmEGg=="],
 
     "comma-separated-tokens": ["comma-separated-tokens@2.0.3", "", {}, "sha512-Fu4hJdvzeylCfQPp9SGWidpzrMs7tTrlu6Vb8XGaRGck8QSNZJJp538Wrb60Lax4fPwR64ViY468OIUTbRlGZg=="],
 
