@@ -7,14 +7,16 @@ import {
   buildTimeMachineUrl,
   buildCommitFeedUrl,
   renderInteractiveCards,
-  escapeHtml
+  escapeHtml,
 } from '../src/interactive.js';
 
 describe('Interactive Cards Component (src/interactive.js)', () => {
-
   describe('HTML Escaping Helper (escapeHtml)', () => {
     it('escapes special HTML characters properly', () => {
-      assert.equal(escapeHtml('<script>alert("xss")</script>'), '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;');
+      assert.equal(
+        escapeHtml('<script>alert("xss")</script>'),
+        '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;'
+      );
       assert.equal(escapeHtml("foo & bar 'baz'"), 'foo &amp; bar &#39;baz&#39;');
       assert.equal(escapeHtml(''), '');
       assert.equal(escapeHtml(null), '');
@@ -72,7 +74,9 @@ describe('Interactive Cards Component (src/interactive.js)', () => {
 
   describe('Deep Linker URL Generation (buildDeepLinkerUrl)', () => {
     const fileCtx = parseGithubUrl('https://github.com/facebook/react/blob/main/src/index.js');
-    const fileCtxWithLines = parseGithubUrl('https://github.com/facebook/react/blob/main/src/index.js#L10-L20');
+    const fileCtxWithLines = parseGithubUrl(
+      'https://github.com/facebook/react/blob/main/src/index.js#L10-L20'
+    );
     const repoCtx = parseGithubUrl('https://github.com/facebook/react');
 
     it('returns null for non-File or invalid contexts', () => {
@@ -142,48 +146,84 @@ describe('Interactive Cards Component (src/interactive.js)', () => {
     });
 
     it('generates ref compare URL (main...dev)', () => {
-      const url = buildTimeMachineUrl(repoCtx, { baseRef: 'main', compareMode: 'ref', compareRef: 'dev' });
+      const url = buildTimeMachineUrl(repoCtx, {
+        baseRef: 'main',
+        compareMode: 'ref',
+        compareRef: 'dev',
+      });
       assert.equal(url, 'https://github.com/octocat/Hello-World/compare/main...dev');
     });
 
     it('defaults compareRef to HEAD if omitted in ref mode', () => {
-      const url = buildTimeMachineUrl(repoCtx, { baseRef: 'main', compareMode: 'ref', compareRef: '' });
+      const url = buildTimeMachineUrl(repoCtx, {
+        baseRef: 'main',
+        compareMode: 'ref',
+        compareRef: '',
+      });
       assert.equal(url, 'https://github.com/octocat/Hello-World/compare/main...HEAD');
     });
 
     it('generates relative timeframe compare URL (main@{1.week.ago}...main)', () => {
-      const url = buildTimeMachineUrl(repoCtx, { baseRef: 'main', compareMode: 'timeframe', timeframe: '1.week.ago' });
+      const url = buildTimeMachineUrl(repoCtx, {
+        baseRef: 'main',
+        compareMode: 'timeframe',
+        timeframe: '1.week.ago',
+      });
       assert.equal(url, 'https://github.com/octocat/Hello-World/compare/main@{1.week.ago}...main');
     });
 
     it('handles all timeframe dropdown options (1.month.ago, yesterday, 1.year.ago)', () => {
-      const t1 = buildTimeMachineUrl(repoCtx, { compareMode: 'timeframe', timeframe: '1.month.ago' });
+      const t1 = buildTimeMachineUrl(repoCtx, {
+        compareMode: 'timeframe',
+        timeframe: '1.month.ago',
+      });
       assert.equal(t1, 'https://github.com/octocat/Hello-World/compare/main@{1.month.ago}...main');
 
       const t2 = buildTimeMachineUrl(repoCtx, { compareMode: 'timeframe', timeframe: 'yesterday' });
       assert.equal(t2, 'https://github.com/octocat/Hello-World/compare/main@{yesterday}...main');
 
-      const t3 = buildTimeMachineUrl(repoCtx, { compareMode: 'timeframe', timeframe: '1.year.ago' });
+      const t3 = buildTimeMachineUrl(repoCtx, {
+        compareMode: 'timeframe',
+        timeframe: '1.year.ago',
+      });
       assert.equal(t3, 'https://github.com/octocat/Hello-World/compare/main@{1.year.ago}...main');
     });
 
     it('generates custom date compare URL (main@{2025-06-01}...main)', () => {
-      const url = buildTimeMachineUrl(repoCtx, { baseRef: 'main', compareMode: 'custom_date', customDate: '2025-06-01' });
+      const url = buildTimeMachineUrl(repoCtx, {
+        baseRef: 'main',
+        compareMode: 'custom_date',
+        customDate: '2025-06-01',
+      });
       assert.equal(url, 'https://github.com/octocat/Hello-World/compare/main@{2025-06-01}...main');
     });
 
     it('falls back to 1.week.ago if custom date string is empty', () => {
-      const url = buildTimeMachineUrl(repoCtx, { baseRef: 'main', compareMode: 'custom_date', customDate: '' });
+      const url = buildTimeMachineUrl(repoCtx, {
+        baseRef: 'main',
+        compareMode: 'custom_date',
+        customDate: '',
+      });
       assert.equal(url, 'https://github.com/octocat/Hello-World/compare/main@{1.week.ago}...main');
     });
 
     it('appends path parameter when context is File and includeFilePath is true', () => {
-      const url = buildTimeMachineUrl(fileCtx, { baseRef: 'main', compareMode: 'ref', compareRef: 'dev', includeFilePath: true });
+      const url = buildTimeMachineUrl(fileCtx, {
+        baseRef: 'main',
+        compareMode: 'ref',
+        compareRef: 'dev',
+        includeFilePath: true,
+      });
       assert.equal(url, 'https://github.com/octocat/Hello-World/compare/main...dev?path=README.md');
     });
 
     it('omits path parameter when includeFilePath is false', () => {
-      const url = buildTimeMachineUrl(fileCtx, { baseRef: 'main', compareMode: 'ref', compareRef: 'dev', includeFilePath: false });
+      const url = buildTimeMachineUrl(fileCtx, {
+        baseRef: 'main',
+        compareMode: 'ref',
+        compareRef: 'dev',
+        includeFilePath: false,
+      });
       assert.equal(url, 'https://github.com/octocat/Hello-World/compare/main...dev');
     });
   });
@@ -223,7 +263,7 @@ describe('Interactive Cards Component (src/interactive.js)', () => {
       const url = buildCommitFeedUrl(repoCtx, {
         refInput: 'feature/v1',
         pathInput: 'src/my file.js',
-        authorInput: 'John Doe <john@example.com>'
+        authorInput: 'John Doe <john@example.com>',
       });
       assert.equal(
         url,
@@ -233,7 +273,6 @@ describe('Interactive Cards Component (src/interactive.js)', () => {
   });
 
   describe('DOM Renderer (renderInteractiveCards)', () => {
-
     function createMockElement() {
       const eventListeners = {};
       const attributes = {};
@@ -264,20 +303,26 @@ describe('Interactive Cards Component (src/interactive.js)', () => {
         },
         dispatchEvent(event) {
           const fns = eventListeners[event] || [];
-          fns.forEach(fn => fn({ currentTarget: mock }));
+          fns.forEach((fn) => fn({ currentTarget: mock }));
         },
         querySelector(selector) {
           // Simple selector lookup helper for mock testing
-          return children.find(c => c.id === selector.replace('#', '') || c.className?.includes(selector.replace('.', ''))) || null;
+          return (
+            children.find(
+              (c) =>
+                c.id === selector.replace('#', '') ||
+                c.className?.includes(selector.replace('.', ''))
+            ) || null
+          );
         },
         querySelectorAll(selector) {
-          return children.filter(c => c.className?.includes(selector.replace('.', '')));
+          return children.filter((c) => c.className?.includes(selector.replace('.', '')));
         },
         appendChild(child) {
           child.parentElement = mock;
           children.push(child);
           return child;
-        }
+        },
       };
 
       return mock;
@@ -318,10 +363,10 @@ describe('Interactive Cards Component (src/interactive.js)', () => {
       const repoCtx = parseGithubUrl('https://github.com/facebook/react');
       renderInteractiveCards(mockContainer, repoCtx);
 
-      assert.ok(mockContainer.innerHTML.includes('Deep Linker requires a <strong>File</strong> context URL'));
+      assert.ok(
+        mockContainer.innerHTML.includes('Deep Linker requires a <strong>File</strong> context URL')
+      );
       assert.ok(mockContainer.innerHTML.includes('Context Mismatch'));
     });
-
   });
-
 });

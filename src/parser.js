@@ -7,10 +7,31 @@
  * Reserved GitHub top-level path segments that represent system routes, not usernames.
  */
 const RESERVED_NAMES = new Set([
-  'about', 'apps', 'blog', 'careers', 'contact', 'customer-stories',
-  'enterprise', 'explore', 'features', 'join', 'login', 'marketplace',
-  'notifications', 'orgs', 'press', 'pricing', 'search', 'security',
-  'settings', 'signup', 'site', 'sponsors', 'stars', 'topics', 'trending'
+  'about',
+  'apps',
+  'blog',
+  'careers',
+  'contact',
+  'customer-stories',
+  'enterprise',
+  'explore',
+  'features',
+  'join',
+  'login',
+  'marketplace',
+  'notifications',
+  'orgs',
+  'press',
+  'pricing',
+  'search',
+  'security',
+  'settings',
+  'signup',
+  'site',
+  'sponsors',
+  'stars',
+  'topics',
+  'trending',
 ]);
 
 /**
@@ -31,7 +52,7 @@ function parseLineFragment(hash) {
     const end = parseInt(rangeMatch[2], 10);
     return {
       lineStart: Number.isFinite(start) ? start : null,
-      lineEnd: Number.isFinite(end) ? end : null
+      lineEnd: Number.isFinite(end) ? end : null,
     };
   }
 
@@ -42,7 +63,7 @@ function parseLineFragment(hash) {
     const validLine = Number.isFinite(line) ? line : null;
     return {
       lineStart: validLine,
-      lineEnd: validLine
+      lineEnd: validLine,
     };
   }
 
@@ -92,31 +113,32 @@ export function parseGithubUrl(inputUrl) {
       isRaw: false,
       queryParams: Object.freeze({}),
       rawUrl: '',
-      normalizedUrl: null
+      normalizedUrl: null,
     });
   }
 
   const rawUrl = inputUrl;
 
-  const createUnknownResult = () => Object.freeze({
-    valid: false,
-    context: 'Unknown',
-    type: 'unknown',
-    owner: null,
-    repo: null,
-    ref: null,
-    filePath: null,
-    path: null,
-    commitHash: null,
-    commitSha: null,
-    prNumber: null,
-    lineStart: null,
-    lineEnd: null,
-    isRaw: false,
-    queryParams: Object.freeze({}),
-    rawUrl,
-    normalizedUrl: null
-  });
+  const createUnknownResult = () =>
+    Object.freeze({
+      valid: false,
+      context: 'Unknown',
+      type: 'unknown',
+      owner: null,
+      repo: null,
+      ref: null,
+      filePath: null,
+      path: null,
+      commitHash: null,
+      commitSha: null,
+      prNumber: null,
+      lineStart: null,
+      lineEnd: null,
+      isRaw: false,
+      queryParams: Object.freeze({}),
+      rawUrl,
+      normalizedUrl: null,
+    });
 
   const trimmed = inputUrl.trim();
   if (!trimmed) {
@@ -137,7 +159,13 @@ export function parseGithubUrl(inputUrl) {
   }
 
   const hostname = parsedUrl.hostname.toLowerCase();
-  const validHostnames = ['github.com', 'www.github.com', 'raw.githubusercontent.com', 'github.dev', 'github1s.com'];
+  const validHostnames = [
+    'github.com',
+    'www.github.com',
+    'raw.githubusercontent.com',
+    'github.dev',
+    'github1s.com',
+  ];
 
   if (!validHostnames.includes(hostname)) {
     return createUnknownResult();
@@ -179,7 +207,7 @@ export function parseGithubUrl(inputUrl) {
         isRaw: true,
         queryParams: Object.freeze(queryParams),
         rawUrl,
-        normalizedUrl
+        normalizedUrl,
       });
     } else {
       return createUnknownResult();
@@ -220,7 +248,7 @@ export function parseGithubUrl(inputUrl) {
       isRaw: false,
       queryParams: Object.freeze(queryParams),
       rawUrl,
-      normalizedUrl
+      normalizedUrl,
     });
   }
 
@@ -253,7 +281,7 @@ export function parseGithubUrl(inputUrl) {
       isRaw: false,
       queryParams: Object.freeze(queryParams),
       rawUrl,
-      normalizedUrl
+      normalizedUrl,
     });
   }
 
@@ -284,7 +312,7 @@ export function parseGithubUrl(inputUrl) {
         isRaw: false,
         queryParams: Object.freeze(queryParams),
         rawUrl,
-        normalizedUrl
+        normalizedUrl,
       });
     } else {
       // Directory tree view (github.com/owner/repo/tree/main/src/components) -> context: 'File'
@@ -306,7 +334,7 @@ export function parseGithubUrl(inputUrl) {
         isRaw: false,
         queryParams: Object.freeze(queryParams),
         rawUrl,
-        normalizedUrl
+        normalizedUrl,
       });
     }
   }
@@ -333,13 +361,15 @@ export function parseGithubUrl(inputUrl) {
       isRaw: route === 'raw',
       queryParams: Object.freeze(queryParams),
       rawUrl,
-      normalizedUrl
+      normalizedUrl,
     });
   }
 
   if (route === 'commit') {
     const commitSha = segments[3] || null;
-    const normalizedUrl = commitSha ? `https://github.com/${owner}/${repo}/commit/${commitSha}` : `https://github.com/${owner}/${repo}`;
+    const normalizedUrl = commitSha
+      ? `https://github.com/${owner}/${repo}/commit/${commitSha}`
+      : `https://github.com/${owner}/${repo}`;
 
     return Object.freeze({
       valid: true,
@@ -358,13 +388,15 @@ export function parseGithubUrl(inputUrl) {
       isRaw: false,
       queryParams: Object.freeze(queryParams),
       rawUrl,
-      normalizedUrl
+      normalizedUrl,
     });
   }
 
   if (route === 'pull' || route === 'pulls') {
     const prNumber = segments[3] || null;
-    const normalizedUrl = prNumber ? `https://github.com/${owner}/${repo}/pull/${prNumber}` : `https://github.com/${owner}/${repo}`;
+    const normalizedUrl = prNumber
+      ? `https://github.com/${owner}/${repo}/pull/${prNumber}`
+      : `https://github.com/${owner}/${repo}`;
 
     return Object.freeze({
       valid: true,
@@ -383,7 +415,7 @@ export function parseGithubUrl(inputUrl) {
       isRaw: false,
       queryParams: Object.freeze(queryParams),
       rawUrl,
-      normalizedUrl
+      normalizedUrl,
     });
   }
 
@@ -405,7 +437,7 @@ export function parseGithubUrl(inputUrl) {
     isRaw: false,
     queryParams: Object.freeze(queryParams),
     rawUrl,
-    normalizedUrl: `https://github.com/${owner}/${repo}`
+    normalizedUrl: `https://github.com/${owner}/${repo}`,
   });
 }
 

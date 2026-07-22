@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 import { STANDARD_CARDS, isCardCompatible, getCardUrl, getCompatibleCards } from '../src/cards.js';
 
 describe('Adversarial & Stress Tests for src/cards.js', () => {
-
   describe('1. Malformed Parsed Contexts', () => {
     it('returns false/null for null and undefined context', () => {
       for (const card of STANDARD_CARDS) {
@@ -32,7 +31,7 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
         valid: false,
         context: 'Repo',
         owner: 'facebook',
-        repo: 'react'
+        repo: 'react',
       };
       for (const card of STANDARD_CARDS) {
         assert.equal(isCardCompatible(card, invalidContext), false);
@@ -46,7 +45,7 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
         valid: true,
         context: 'Unknown',
         owner: 'facebook',
-        repo: 'react'
+        repo: 'react',
       };
       for (const card of STANDARD_CARDS) {
         assert.equal(isCardCompatible(card, unknownContext), false);
@@ -56,7 +55,15 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
     });
 
     it('returns false/null when context is an unrecognised type', () => {
-      const bogusContextTypes = ['Organization', 'Gist', 'Discussion', 'Project', 'Wiki', 'Issue', ''];
+      const bogusContextTypes = [
+        'Organization',
+        'Gist',
+        'Discussion',
+        'Project',
+        'Wiki',
+        'Issue',
+        '',
+      ];
       for (const ctxType of bogusContextTypes) {
         const ctx = { valid: true, context: ctxType, owner: 'owner', repo: 'repo' };
         for (const card of STANDARD_CARDS) {
@@ -70,28 +77,54 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
     it('handles context missing required identifiers (null owner/repo/filePath)', () => {
       const missingOwner = { valid: true, context: 'Repo', owner: null, repo: 'react' };
       const missingRepo = { valid: true, context: 'Repo', owner: 'facebook', repo: null };
-      const missingFile = { valid: true, context: 'File', owner: 'facebook', repo: 'react', filePath: null };
-      const missingSha = { valid: true, context: 'Commit', owner: 'facebook', repo: 'react', commitSha: null };
-      const missingPR = { valid: true, context: 'PR', owner: 'facebook', repo: 'react', prNumber: null };
+      const missingFile = {
+        valid: true,
+        context: 'File',
+        owner: 'facebook',
+        repo: 'react',
+        filePath: null,
+      };
+      const missingSha = {
+        valid: true,
+        context: 'Commit',
+        owner: 'facebook',
+        repo: 'react',
+        commitSha: null,
+      };
+      const missingPR = {
+        valid: true,
+        context: 'PR',
+        owner: 'facebook',
+        repo: 'react',
+        prNumber: null,
+      };
 
       for (const card of STANDARD_CARDS) {
         if (card.id === 'keys' || card.id === 'gpg') continue; // keys and gpg only need owner
-        assert.equal(isCardCompatible(card, missingOwner), false, `Card ${card.id} should be incompatible with missing owner`);
+        assert.equal(
+          isCardCompatible(card, missingOwner),
+          false,
+          `Card ${card.id} should be incompatible with missing owner`
+        );
         assert.equal(getCardUrl(card, missingOwner), null);
       }
 
       for (const card of STANDARD_CARDS) {
         if (card.id === 'keys' || card.id === 'gpg') continue;
-        assert.equal(isCardCompatible(card, missingRepo), false, `Card ${card.id} should be incompatible with missing repo`);
+        assert.equal(
+          isCardCompatible(card, missingRepo),
+          false,
+          `Card ${card.id} should be incompatible with missing repo`
+        );
         assert.equal(getCardUrl(card, missingRepo), null);
       }
 
-      const rawFileCard = STANDARD_CARDS.find(c => c.id === 'raw_file');
+      const rawFileCard = STANDARD_CARDS.find((c) => c.id === 'raw_file');
       assert.equal(isCardCompatible(rawFileCard, missingFile), false);
       assert.equal(getCardUrl(rawFileCard, missingFile), null);
 
-      const patchCard = STANDARD_CARDS.find(c => c.id === 'patch');
-      const diffCard = STANDARD_CARDS.find(c => c.id === 'diff');
+      const patchCard = STANDARD_CARDS.find((c) => c.id === 'patch');
+      const diffCard = STANDARD_CARDS.find((c) => c.id === 'diff');
       assert.equal(isCardCompatible(patchCard, missingSha), false);
       assert.equal(getCardUrl(patchCard, missingSha), null);
       assert.equal(isCardCompatible(diffCard, missingPR), false);
@@ -103,7 +136,7 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
       const numBoolValid = { valid: 1, context: 'User', owner: 'torvalds' }; // 1 is truthy
       const zeroValid = { valid: 0, context: 'User', owner: 'torvalds' }; // 0 is falsy
 
-      const keysCard = STANDARD_CARDS.find(c => c.id === 'keys');
+      const keysCard = STANDARD_CARDS.find((c) => c.id === 'keys');
       assert.equal(isCardCompatible(keysCard, nonBoolValid), true);
       assert.equal(isCardCompatible(keysCard, numBoolValid), true);
       assert.equal(isCardCompatible(keysCard, zeroValid), false);
@@ -130,9 +163,21 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
 
     it('returns false/null when card allowedContexts is missing, invalid type, or empty', () => {
       const missingAllowed = { id: 'test', generateUrl: () => 'https://example.com' };
-      const nonArrayAllowed = { id: 'test', allowedContexts: 'Repo', generateUrl: () => 'https://example.com' };
-      const emptyAllowed = { id: 'test', allowedContexts: [], generateUrl: () => 'https://example.com' };
-      const nullAllowed = { id: 'test', allowedContexts: null, generateUrl: () => 'https://example.com' };
+      const nonArrayAllowed = {
+        id: 'test',
+        allowedContexts: 'Repo',
+        generateUrl: () => 'https://example.com',
+      };
+      const emptyAllowed = {
+        id: 'test',
+        allowedContexts: [],
+        generateUrl: () => 'https://example.com',
+      };
+      const nullAllowed = {
+        id: 'test',
+        allowedContexts: null,
+        generateUrl: () => 'https://example.com',
+      };
 
       assert.equal(isCardCompatible(missingAllowed, validCtx), false);
       assert.equal(isCardCompatible(nonArrayAllowed, validCtx), false);
@@ -149,12 +194,16 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
       const throwingCard = {
         id: 'throwing',
         allowedContexts: ['Repo'],
-        generateUrl: () => { throw new Error('Uncaught error inside generator'); }
+        generateUrl: () => {
+          throw new Error('Uncaught error inside generator');
+        },
       };
       const primitiveThrowingCard = {
         id: 'prim_throwing',
         allowedContexts: ['Repo'],
-        generateUrl: () => { throw 'String exception'; }
+        generateUrl: () => {
+          throw 'String exception';
+        },
       };
 
       assert.doesNotThrow(() => {
@@ -167,7 +216,11 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
 
     it('returns false/null when card generateUrl returns non-string or empty string', () => {
       const returnsNumber = { id: 'num', allowedContexts: ['Repo'], generateUrl: () => 12345 };
-      const returnsObj = { id: 'obj', allowedContexts: ['Repo'], generateUrl: () => ({ url: 'https://example.com' }) };
+      const returnsObj = {
+        id: 'obj',
+        allowedContexts: ['Repo'],
+        generateUrl: () => ({ url: 'https://example.com' }),
+      };
       const returnsEmpty = { id: 'empty', allowedContexts: ['Repo'], generateUrl: () => '' };
       const returnsNull = { id: 'null', allowedContexts: ['Repo'], generateUrl: () => null };
 
@@ -186,7 +239,11 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
 
     it('returns false/null when generateUrl is missing or not a function', () => {
       const missingGen = { id: 'no_gen', allowedContexts: ['Repo'] };
-      const stringGen = { id: 'str_gen', allowedContexts: ['Repo'], generateUrl: 'https://example.com' };
+      const stringGen = {
+        id: 'str_gen',
+        allowedContexts: ['Repo'],
+        generateUrl: 'https://example.com',
+      };
 
       assert.equal(isCardCompatible(missingGen, validCtx), false);
       assert.equal(getCardUrl(missingGen, validCtx), null);
@@ -206,9 +263,12 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
       assert.doesNotThrow(() => {
         const compatible = getCompatibleCards(nullProtoCtx);
         assert.equal(compatible.length, 20);
-        const boltCard = STANDARD_CARDS.find(c => c.id === 'boltnew');
+        const boltCard = STANDARD_CARDS.find((c) => c.id === 'boltnew');
         assert.equal(isCardCompatible(boltCard, nullProtoCtx), true);
-        assert.equal(getCardUrl(boltCard, nullProtoCtx), 'https://bolt.new/github.com/facebook/react');
+        assert.equal(
+          getCardUrl(boltCard, nullProtoCtx),
+          'https://bolt.new/github.com/facebook/react'
+        );
       });
     });
 
@@ -219,7 +279,7 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
         get owner() {
           throw new Error('Owner getter execution failed');
         },
-        repo: 'react'
+        repo: 'react',
       };
 
       for (const card of STANDARD_CARDS) {
@@ -235,11 +295,11 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
         owner: 'facebook',
         get repo() {
           throw new Error('Repo getter execution failed');
-        }
+        },
       };
 
-      const boltCard = STANDARD_CARDS.find(c => c.id === 'boltnew');
-      const keysCard = STANDARD_CARDS.find(c => c.id === 'keys');
+      const boltCard = STANDARD_CARDS.find((c) => c.id === 'boltnew');
+      const keysCard = STANDARD_CARDS.find((c) => c.id === 'keys');
 
       assert.doesNotThrow(() => {
         // repo-dependent card catches error and returns false
@@ -260,14 +320,19 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
         repo: 'react',
         extraPayload: '<script>alert(1)</script>',
         __proto__: { injected: true },
-        toString: () => { throw new Error('toString exploded'); },
+        toString: () => {
+          throw new Error('toString exploded');
+        },
         valueOf: null,
-        [Symbol('custom')]: 'symbol_value'
+        [Symbol('custom')]: 'symbol_value',
       };
 
-      const boltCard = STANDARD_CARDS.find(c => c.id === 'boltnew');
+      const boltCard = STANDARD_CARDS.find((c) => c.id === 'boltnew');
       assert.equal(isCardCompatible(boltCard, clutteredCtx), true);
-      assert.equal(getCardUrl(boltCard, clutteredCtx), 'https://bolt.new/github.com/facebook/react');
+      assert.equal(
+        getCardUrl(boltCard, clutteredCtx),
+        'https://bolt.new/github.com/facebook/react'
+      );
     });
 
     it('remains resilient under Object.prototype pollution', () => {
@@ -280,7 +345,7 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
       try {
         const emptyObj = {};
         // Empty object inherits valid: true, context: 'User', owner: 'injectedOwner'
-        const keysCard = STANDARD_CARDS.find(c => c.id === 'keys');
+        const keysCard = STANDARD_CARDS.find((c) => c.id === 'keys');
         assert.doesNotThrow(() => {
           const compatible = isCardCompatible(keysCard, emptyObj);
           // emptyObj inherits valid=true, context='User', owner='injectedOwner' from Object.prototype
@@ -300,12 +365,72 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
 
   describe('4. Exhaustive Matrix of All 23 Standard Cards', () => {
     const sampleContexts = [
-      { id: 'user', valid: true, context: 'User', owner: 'torvalds', repo: null, ref: null, filePath: null, commitSha: null, prNumber: null },
-      { id: 'repo', valid: true, context: 'Repo', owner: 'facebook', repo: 'react', ref: 'main', filePath: null, commitSha: null, prNumber: null },
-      { id: 'file', valid: true, context: 'File', owner: 'facebook', repo: 'react', ref: 'v18.2.0', filePath: 'package.json', commitSha: null, prNumber: null },
-      { id: 'commit', valid: true, context: 'Commit', owner: 'facebook', repo: 'react', ref: null, filePath: null, commitSha: 'a1b2c3d4e5f6', prNumber: null },
-      { id: 'pr', valid: true, context: 'PR', owner: 'facebook', repo: 'react', ref: null, filePath: null, commitSha: null, prNumber: '1234' },
-      { id: 'invalid', valid: false, context: 'Unknown', owner: null, repo: null, ref: null, filePath: null, commitSha: null, prNumber: null }
+      {
+        id: 'user',
+        valid: true,
+        context: 'User',
+        owner: 'torvalds',
+        repo: null,
+        ref: null,
+        filePath: null,
+        commitSha: null,
+        prNumber: null,
+      },
+      {
+        id: 'repo',
+        valid: true,
+        context: 'Repo',
+        owner: 'facebook',
+        repo: 'react',
+        ref: 'main',
+        filePath: null,
+        commitSha: null,
+        prNumber: null,
+      },
+      {
+        id: 'file',
+        valid: true,
+        context: 'File',
+        owner: 'facebook',
+        repo: 'react',
+        ref: 'v18.2.0',
+        filePath: 'package.json',
+        commitSha: null,
+        prNumber: null,
+      },
+      {
+        id: 'commit',
+        valid: true,
+        context: 'Commit',
+        owner: 'facebook',
+        repo: 'react',
+        ref: null,
+        filePath: null,
+        commitSha: 'a1b2c3d4e5f6',
+        prNumber: null,
+      },
+      {
+        id: 'pr',
+        valid: true,
+        context: 'PR',
+        owner: 'facebook',
+        repo: 'react',
+        ref: null,
+        filePath: null,
+        commitSha: null,
+        prNumber: '1234',
+      },
+      {
+        id: 'invalid',
+        valid: false,
+        context: 'Unknown',
+        owner: null,
+        repo: null,
+        ref: null,
+        filePath: null,
+        commitSha: null,
+        prNumber: null,
+      },
     ];
 
     it('never throws uncaught exception for any card x context combination', () => {
@@ -330,7 +455,9 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
   describe('5. Immutability and Side-Effect Safety', () => {
     it('does not mutate STANDARD_CARDS array or cards when evaluating compatibility', () => {
       const initialCardsCount = STANDARD_CARDS.length;
-      const initialJson = JSON.stringify(STANDARD_CARDS.map(c => ({ id: c.id, allowedContexts: c.allowedContexts })));
+      const initialJson = JSON.stringify(
+        STANDARD_CARDS.map((c) => ({ id: c.id, allowedContexts: c.allowedContexts }))
+      );
 
       const repoCtx = { valid: true, context: 'Repo', owner: 'facebook', repo: 'react' };
       getCompatibleCards(repoCtx);
@@ -340,7 +467,9 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
       }
 
       assert.equal(STANDARD_CARDS.length, initialCardsCount);
-      const afterJson = JSON.stringify(STANDARD_CARDS.map(c => ({ id: c.id, allowedContexts: c.allowedContexts })));
+      const afterJson = JSON.stringify(
+        STANDARD_CARDS.map((c) => ({ id: c.id, allowedContexts: c.allowedContexts }))
+      );
       assert.equal(initialJson, afterJson);
     });
 
@@ -351,7 +480,7 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
         owner: 'facebook',
         repo: 'react',
         ref: 'main',
-        filePath: 'README.md'
+        filePath: 'README.md',
       });
 
       assert.doesNotThrow(() => {

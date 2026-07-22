@@ -4,7 +4,7 @@ import {
   parseGithubUrl,
   isValidGithubUrl,
   extractRepoPath,
-  normalizeGithubUrl
+  normalizeGithubUrl,
 } from '../src/parser.js';
 
 describe('GitHub URL Parser', () => {
@@ -95,7 +95,10 @@ describe('GitHub URL Parser', () => {
       assert.equal(result.filePath, 'README.md');
       assert.equal(result.path, 'README.md');
       assert.equal(result.isRaw, false);
-      assert.equal(result.normalizedUrl, 'https://github.com/octocat/Spoon-Knife/blob/main/README.md');
+      assert.equal(
+        result.normalizedUrl,
+        'https://github.com/octocat/Spoon-Knife/blob/main/README.md'
+      );
     });
 
     it('parses line fragment ranges (#L10-L25)', () => {
@@ -111,7 +114,10 @@ describe('GitHub URL Parser', () => {
       assert.equal(result.lineStart, 10);
       assert.equal(result.lineEnd, 25);
       assert.equal(result.rawUrl, input);
-      assert.equal(result.normalizedUrl, 'https://github.com/octocat/Spoon-Knife/blob/main/src/utils/math.js');
+      assert.equal(
+        result.normalizedUrl,
+        'https://github.com/octocat/Spoon-Knife/blob/main/src/utils/math.js'
+      );
     });
 
     it('parses single line fragment (#L15)', () => {
@@ -145,7 +151,10 @@ describe('GitHub URL Parser', () => {
       assert.equal(result.ref, 'main');
       assert.equal(result.filePath, 'package.json');
       assert.equal(result.isRaw, true);
-      assert.equal(result.normalizedUrl, 'https://github.com/octocat/Spoon-Knife/blob/main/package.json');
+      assert.equal(
+        result.normalizedUrl,
+        'https://github.com/octocat/Spoon-Knife/blob/main/package.json'
+      );
     });
 
     it('parses directory tree views as File path context', () => {
@@ -158,13 +167,17 @@ describe('GitHub URL Parser', () => {
       assert.equal(result.repo, 'Spoon-Knife');
       assert.equal(result.ref, 'main');
       assert.equal(result.filePath, 'src/components');
-      assert.equal(result.normalizedUrl, 'https://github.com/octocat/Spoon-Knife/tree/main/src/components');
+      assert.equal(
+        result.normalizedUrl,
+        'https://github.com/octocat/Spoon-Knife/tree/main/src/components'
+      );
     });
   });
 
   describe('Commit Context', () => {
     it('parses full 40-character commit SHA URLs', () => {
-      const input = 'https://github.com/octocat/Spoon-Knife/commit/d6b777053b94a8c92a9b40742f1f58273614138e';
+      const input =
+        'https://github.com/octocat/Spoon-Knife/commit/d6b777053b94a8c92a9b40742f1f58273614138e';
       const result = parseGithubUrl(input);
 
       assert.equal(result.valid, true);
@@ -175,7 +188,10 @@ describe('GitHub URL Parser', () => {
       assert.equal(result.ref, 'd6b777053b94a8c92a9b40742f1f58273614138e');
       assert.equal(result.commitSha, 'd6b777053b94a8c92a9b40742f1f58273614138e');
       assert.equal(result.commitHash, 'd6b777053b94a8c92a9b40742f1f58273614138e');
-      assert.equal(result.normalizedUrl, 'https://github.com/octocat/Spoon-Knife/commit/d6b777053b94a8c92a9b40742f1f58273614138e');
+      assert.equal(
+        result.normalizedUrl,
+        'https://github.com/octocat/Spoon-Knife/commit/d6b777053b94a8c92a9b40742f1f58273614138e'
+      );
     });
 
     it('parses short commit SHA URLs with fragment anchors', () => {
@@ -270,15 +286,29 @@ describe('GitHub URL Parser', () => {
     });
 
     it('extractRepoPath returns owner/repo or null', () => {
-      assert.equal(extractRepoPath('https://github.com/octocat/Spoon-Knife'), 'octocat/Spoon-Knife');
-      assert.equal(extractRepoPath('https://github.com/octocat/Spoon-Knife/blob/main/README.md'), 'octocat/Spoon-Knife');
+      assert.equal(
+        extractRepoPath('https://github.com/octocat/Spoon-Knife'),
+        'octocat/Spoon-Knife'
+      );
+      assert.equal(
+        extractRepoPath('https://github.com/octocat/Spoon-Knife/blob/main/README.md'),
+        'octocat/Spoon-Knife'
+      );
       assert.equal(extractRepoPath('https://github.com/octocat'), null);
       assert.equal(extractRepoPath('https://github.com/settings'), null);
     });
 
     it('normalizeGithubUrl returns normalized string or null', () => {
-      assert.equal(normalizeGithubUrl('github.com/octocat/Spoon-Knife.git'), 'https://github.com/octocat/Spoon-Knife');
-      assert.equal(normalizeGithubUrl('https://raw.githubusercontent.com/octocat/Spoon-Knife/main/package.json'), 'https://github.com/octocat/Spoon-Knife/blob/main/package.json');
+      assert.equal(
+        normalizeGithubUrl('github.com/octocat/Spoon-Knife.git'),
+        'https://github.com/octocat/Spoon-Knife'
+      );
+      assert.equal(
+        normalizeGithubUrl(
+          'https://raw.githubusercontent.com/octocat/Spoon-Knife/main/package.json'
+        ),
+        'https://github.com/octocat/Spoon-Knife/blob/main/package.json'
+      );
       assert.equal(normalizeGithubUrl('https://github.com/settings'), null);
     });
   });

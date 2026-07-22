@@ -35,6 +35,12 @@
       "claimToken": "56b308c98936e4fe4af952cf75dbf72ca6f083a107c49451415f1f84b5b2ac38",
       "claimUrl": "https://here.now/claim?slug=graceful-anvil-jk3q&token=56b308c98936e4fe4af952cf75dbf72ca6f083a107c49451415f1f84b5b2ac38",
       "expiresAt": "2026-07-23T14:06:53.513Z"
+    },
+    "silken-comet-pzys": {
+      "siteUrl": "https://silken-comet-pzys.here.now/",
+      "claimToken": "e9daedcf5e99a8f479981f566b3eac6e32c937a0910fb03ad7db84b62e22884a",
+      "claimUrl": "https://here.now/claim?slug=silken-comet-pzys&token=e9daedcf5e99a8f479981f566b3eac6e32c937a0910fb03ad7db84b62e22884a",
+      "expiresAt": "2026-07-23T14:11:26.993Z"
     }
   }
 }

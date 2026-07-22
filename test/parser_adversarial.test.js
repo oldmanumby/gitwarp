@@ -4,11 +4,10 @@ import {
   parseGithubUrl,
   isValidGithubUrl,
   extractRepoPath,
-  normalizeGithubUrl
+  normalizeGithubUrl,
 } from '../src/parser.js';
 
 describe('Adversarial & Stress Tests for src/parser.js', () => {
-
   describe('1. Extremely Long Inputs', () => {
     it('handles 10,000+ char path without crashing or freezing', () => {
       const longPath = 'a/'.repeat(5000) + 'file.js';
@@ -73,7 +72,7 @@ describe('Adversarial & Stress Tests for src/parser.js', () => {
         'https://github.com/%00/repo',
         'https://github.com/owner/%00repo',
         'https://github.com/owner/repo/blob/main/file%00.js',
-        'https://github.com/owner\0/repo'
+        'https://github.com/owner\0/repo',
       ];
 
       for (const input of inputs) {
@@ -87,7 +86,7 @@ describe('Adversarial & Stress Tests for src/parser.js', () => {
       const inputs = [
         'https://github.com/owner\n/repo',
         'https://github.com/owner%0A/repo',
-        'https://github.com/owner/repo%0D%0A/blob/main/file.js'
+        'https://github.com/owner/repo%0D%0A/blob/main/file.js',
       ];
 
       for (const input of inputs) {
@@ -101,7 +100,7 @@ describe('Adversarial & Stress Tests for src/parser.js', () => {
       const inputs = [
         'https://github.com/owner/repo/../../etc/passwd',
         'https://github.com/owner/repo/blob/main/%2E%2E/%2E%2E/etc/passwd',
-        'https://github.com/owner/repo/blob/main/..%2f..%2fetc/passwd'
+        'https://github.com/owner/repo/blob/main/..%2f..%2fetc/passwd',
       ];
 
       for (const input of inputs) {
@@ -115,7 +114,7 @@ describe('Adversarial & Stress Tests for src/parser.js', () => {
       const inputs = [
         'https://github.com/owner/repo/blob/main/%',
         'https://github.com/owner/repo/blob/main/%Z',
-        'https://github.com/owner/repo/blob/main/%E0%A0%80'
+        'https://github.com/owner/repo/blob/main/%E0%A0%80',
       ];
 
       for (const input of inputs) {
@@ -137,7 +136,10 @@ describe('Adversarial & Stress Tests for src/parser.js', () => {
       assert.equal(result.repo, 'Spoon-Knife');
       assert.equal(result.ref, 'main');
       assert.equal(result.filePath, 'a/b/c/d/e/f/g/h/i.js');
-      assert.equal(result.normalizedUrl, 'https://github.com/octocat/Spoon-Knife/blob/main/a/b/c/d/e/f/g/h/i.js');
+      assert.equal(
+        result.normalizedUrl,
+        'https://github.com/octocat/Spoon-Knife/blob/main/a/b/c/d/e/f/g/h/i.js'
+      );
       assert.ok(Object.isFrozen(result));
     });
 
@@ -155,7 +157,8 @@ describe('Adversarial & Stress Tests for src/parser.js', () => {
     });
 
     it('handles dot-separated segments in filenames and directories', () => {
-      const input = 'https://github.com/owner.name/repo.name/blob/v1.0.0/dir.with.dots/file.spec.js';
+      const input =
+        'https://github.com/owner.name/repo.name/blob/v1.0.0/dir.with.dots/file.spec.js';
       const result = parseGithubUrl(input);
 
       assert.equal(result.valid, true);
@@ -200,7 +203,8 @@ describe('Adversarial & Stress Tests for src/parser.js', () => {
     });
 
     it('handles integer overflow line fragments (#L9999999999999999999999)', () => {
-      const input = 'https://github.com/octocat/Spoon-Knife/blob/main/index.js#L9999999999999999999999';
+      const input =
+        'https://github.com/octocat/Spoon-Knife/blob/main/index.js#L9999999999999999999999';
       const result = parseGithubUrl(input);
 
       assert.equal(result.valid, true);
@@ -224,7 +228,7 @@ describe('Adversarial & Stress Tests for src/parser.js', () => {
       const inputs = [
         'http://localhost/octocat/Spoon-Knife',
         'https://localhost:8080/octocat/Spoon-Knife',
-        'localhost/octocat/Spoon-Knife'
+        'localhost/octocat/Spoon-Knife',
       ];
       for (const input of inputs) {
         const result = parseGithubUrl(input);
@@ -238,7 +242,7 @@ describe('Adversarial & Stress Tests for src/parser.js', () => {
       const inputs = [
         'http://127.0.0.1/octocat/Spoon-Knife',
         'https://192.168.1.1/octocat/Spoon-Knife',
-        'http://[::1]/octocat/Spoon-Knife'
+        'http://[::1]/octocat/Spoon-Knife',
       ];
       for (const input of inputs) {
         const result = parseGithubUrl(input);
@@ -254,7 +258,7 @@ describe('Adversarial & Stress Tests for src/parser.js', () => {
         'https://notgithub.com/octocat/Spoon-Knife',
         'https://github.com.attacker.com/octocat/Spoon-Knife',
         'https://evilgithub.com/octocat/Spoon-Knife',
-        'https://sub.raw.githubusercontent.com/octocat/Spoon-Knife/main/file.js'
+        'https://sub.raw.githubusercontent.com/octocat/Spoon-Knife/main/file.js',
       ];
       for (const input of inputs) {
         const result = parseGithubUrl(input);
@@ -269,7 +273,7 @@ describe('Adversarial & Stress Tests for src/parser.js', () => {
         'HTTPS://GITHUB.COM/octocat/Spoon-Knife',
         'https://Raw.GitHubUserContent.COM/octocat/Spoon-Knife/main/package.json',
         'https://GITHUB.DEV/octocat/Spoon-Knife',
-        'https://GITHUB1S.COM/octocat/Spoon-Knife'
+        'https://GITHUB1S.COM/octocat/Spoon-Knife',
       ];
       for (const input of inputs) {
         const result = parseGithubUrl(input);
@@ -300,7 +304,7 @@ describe('Adversarial & Stress Tests for src/parser.js', () => {
         { foo: 'bar' },
         new Date(),
         /test-regex/,
-        () => {}
+        () => {},
       ];
 
       for (const input of testInputs) {
@@ -335,7 +339,11 @@ describe('Adversarial & Stress Tests for src/parser.js', () => {
     });
 
     it('handles throwing custom toString() safely without throwing uncaught Error', () => {
-      const throwingObj = { toString() { throw new Error('Uncaught toString error'); } };
+      const throwingObj = {
+        toString() {
+          throw new Error('Uncaught toString error');
+        },
+      };
       assert.doesNotThrow(() => {
         const result = parseGithubUrl(throwingObj);
         assert.equal(result.valid, false);
@@ -344,11 +352,7 @@ describe('Adversarial & Stress Tests for src/parser.js', () => {
     });
 
     it('always returns frozen objects that prevent mutation on all valid outputs', () => {
-      const inputs = [
-        'https://github.com/octocat/Spoon-Knife',
-        'https://invalid-url.com/foo',
-        ''
-      ];
+      const inputs = ['https://github.com/octocat/Spoon-Knife', 'https://invalid-url.com/foo', ''];
 
       for (const input of inputs) {
         const result = parseGithubUrl(input);

@@ -1,6 +1,6 @@
 /**
  * Standard Trick Cards Catalog & Compatibility System
- * 
+ *
  * Exports 23 standard trick cards along with functions to evaluate context compatibility
  * and generate target URLs.
  */
@@ -41,18 +41,19 @@ export const STANDARD_CARDS = [
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo) return null;
       return `https://bolt.new/github.com/${ctx.owner}/${ctx.repo}`;
-    }
+    },
   },
   {
     id: 'deepwiki',
     name: 'deepwiki.com',
     icon: 'book-open',
     allowedContexts: ['Repo', 'File', 'Commit', 'PR'],
-    description: 'Auto-generates a Wikipedia-style wiki and interactive Q&A assistant for the repository.',
+    description:
+      'Auto-generates a Wikipedia-style wiki and interactive Q&A assistant for the repository.',
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo) return null;
       return `https://deepwiki.com/${ctx.owner}/${ctx.repo}`;
-    }
+    },
   },
   {
     id: 'gitdiagram',
@@ -63,7 +64,7 @@ export const STANDARD_CARDS = [
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo) return null;
       return `https://gitdiagram.com/${ctx.owner}/${ctx.repo}`;
-    }
+    },
   },
   {
     id: 'gitingest',
@@ -83,7 +84,7 @@ export const STANDARD_CARDS = [
         return `https://gitingest.com/${ctx.owner}/${ctx.repo}/pull/${ctx.prNumber}`;
       }
       return `https://gitingest.com/${ctx.owner}/${ctx.repo}`;
-    }
+    },
   },
   {
     id: 'githubdev',
@@ -103,18 +104,19 @@ export const STANDARD_CARDS = [
         return `https://github.dev/${ctx.owner}/${ctx.repo}/pull/${ctx.prNumber}`;
       }
       return `https://github.dev/${ctx.owner}/${ctx.repo}`;
-    }
+    },
   },
   {
     id: 'githubgg',
     name: 'github.gg',
     icon: 'layout-dashboard',
     allowedContexts: ['Repo', 'File', 'Commit', 'PR'],
-    description: 'Repository control panel: one-click copy for AI, security scan, and quality score.',
+    description:
+      'Repository control panel: one-click copy for AI, security scan, and quality score.',
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo) return null;
       return `https://github.gg/${ctx.owner}/${ctx.repo}`;
-    }
+    },
   },
   {
     id: 'github1s',
@@ -134,7 +136,7 @@ export const STANDARD_CARDS = [
         return `https://github1s.com/${ctx.owner}/${ctx.repo}/pull/${ctx.prNumber}`;
       }
       return `https://github1s.com/${ctx.owner}/${ctx.repo}`;
-    }
+    },
   },
   {
     id: 'gitmcp',
@@ -145,7 +147,7 @@ export const STANDARD_CARDS = [
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo) return null;
       return `https://gitmcp.io/${ctx.owner}/${ctx.repo}`;
-    }
+    },
   },
   {
     id: 'gitpodcast',
@@ -156,7 +158,7 @@ export const STANDARD_CARDS = [
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo) return null;
       return `https://gitpodcast.com/${ctx.owner}/${ctx.repo}`;
-    }
+    },
   },
   {
     id: 'stackblitz',
@@ -170,7 +172,7 @@ export const STANDARD_CARDS = [
         return `https://stackblitz.com/github/${ctx.owner}/${ctx.repo}?file=${ctx.filePath}`;
       }
       return `https://stackblitz.com/github/${ctx.owner}/${ctx.repo}`;
-    }
+    },
   },
   {
     id: 'starhistory',
@@ -181,7 +183,7 @@ export const STANDARD_CARDS = [
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo) return null;
       return `https://star-history.com/#${ctx.owner}/${ctx.repo}&Date`;
-    }
+    },
   },
   {
     id: 'keys',
@@ -192,7 +194,7 @@ export const STANDARD_CARDS = [
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner) return null;
       return `https://github.com/${ctx.owner}.keys`;
-    }
+    },
   },
   {
     id: 'gpg',
@@ -203,7 +205,7 @@ export const STANDARD_CARDS = [
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner) return null;
       return `https://github.com/${ctx.owner}.gpg`;
-    }
+    },
   },
   {
     id: 'patch',
@@ -220,7 +222,7 @@ export const STANDARD_CARDS = [
         return `https://github.com/${ctx.owner}/${ctx.repo}/pull/${ctx.prNumber}.patch`;
       }
       return null;
-    }
+    },
   },
   {
     id: 'diff',
@@ -237,7 +239,7 @@ export const STANDARD_CARDS = [
         return `https://github.com/${ctx.owner}/${ctx.repo}/pull/${ctx.prNumber}.diff`;
       }
       return null;
-    }
+    },
   },
   {
     id: 'releases_atom',
@@ -248,7 +250,7 @@ export const STANDARD_CARDS = [
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo) return null;
       return `https://github.com/${ctx.owner}/${ctx.repo}/releases.atom`;
-    }
+    },
   },
   {
     id: 'commits_atom',
@@ -262,7 +264,7 @@ export const STANDARD_CARDS = [
         return `https://github.com/${ctx.owner}/${ctx.repo}/commits/${ctx.ref}.atom`;
       }
       return `https://github.com/${ctx.owner}/${ctx.repo}/commits.atom`;
-    }
+    },
   },
   {
     id: 'zip_archive',
@@ -276,7 +278,7 @@ export const STANDARD_CARDS = [
         return `https://github.com/${ctx.owner}/${ctx.repo}/archive/refs/heads/${ctx.ref}.zip`;
       }
       return `https://github.com/${ctx.owner}/${ctx.repo}/archive/HEAD.zip`;
-    }
+    },
   },
   {
     id: 'codespaces_new',
@@ -287,7 +289,7 @@ export const STANDARD_CARDS = [
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo) return null;
       return `https://codespaces.new/${ctx.owner}/${ctx.repo}`;
-    }
+    },
   },
   {
     id: 'gitpod_io',
@@ -307,7 +309,7 @@ export const STANDARD_CARDS = [
         return `https://gitpod.io/#https://github.com/${ctx.owner}/${ctx.repo}/pull/${ctx.prNumber}`;
       }
       return `https://gitpod.io/#https://github.com/${ctx.owner}/${ctx.repo}`;
-    }
+    },
   },
   {
     id: 'vscode_dev',
@@ -327,7 +329,7 @@ export const STANDARD_CARDS = [
         return `https://vscode.dev/github/${ctx.owner}/${ctx.repo}/pull/${ctx.prNumber}`;
       }
       return `https://vscode.dev/github/${ctx.owner}/${ctx.repo}`;
-    }
+    },
   },
   {
     id: 'ssh_clone',
@@ -338,7 +340,7 @@ export const STANDARD_CARDS = [
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo) return null;
       return `git@github.com:${ctx.owner}/${ctx.repo}.git`;
-    }
+    },
   },
   {
     id: 'raw_file',
@@ -349,8 +351,8 @@ export const STANDARD_CARDS = [
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo || !ctx.filePath) return null;
       return `https://raw.githubusercontent.com/${ctx.owner}/${ctx.repo}/${ctx.ref || 'main'}/${ctx.filePath}`;
-    }
-  }
+    },
+  },
 ];
 
 /**
@@ -364,7 +366,11 @@ export function isCardCompatible(card, parsedContext) {
   if (!parsedContext || !parsedContext.valid || parsedContext.context === 'Unknown') {
     return false;
   }
-  if (!card || !Array.isArray(card.allowedContexts) || !card.allowedContexts.includes(parsedContext.context)) {
+  if (
+    !card ||
+    !Array.isArray(card.allowedContexts) ||
+    !card.allowedContexts.includes(parsedContext.context)
+  ) {
     return false;
   }
   try {
@@ -400,5 +406,5 @@ export function getCardUrl(card, parsedContext) {
  * @returns {StandardCard[]}
  */
 export function getCompatibleCards(parsedContext) {
-  return STANDARD_CARDS.filter(card => isCardCompatible(card, parsedContext));
+  return STANDARD_CARDS.filter((card) => isCardCompatible(card, parsedContext));
 }

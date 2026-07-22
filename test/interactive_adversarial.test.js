@@ -6,18 +6,22 @@ import {
   buildDeepLinkerUrl,
   buildTimeMachineUrl,
   buildCommitFeedUrl,
-  renderInteractiveCards
+  renderInteractiveCards,
 } from '../src/interactive.js';
 
 describe('Adversarial & Edge Case Tests for src/interactive.js', () => {
-
-  const baseFileCtx = Object.freeze(parseGithubUrl('https://github.com/facebook/react/blob/main/src/index.js'));
+  const baseFileCtx = Object.freeze(
+    parseGithubUrl('https://github.com/facebook/react/blob/main/src/index.js')
+  );
   const baseRepoCtx = Object.freeze(parseGithubUrl('https://github.com/facebook/react'));
 
   describe('1. Deep Linker Edge Cases (buildDeepLinkerUrl)', () => {
     it('handles huge line numbers without crashing', () => {
       const hugeNumStr = '9999999999999999999999';
-      const url = buildDeepLinkerUrl(baseFileCtx, { lineStart: hugeNumStr, lineEnd: '10000000000000000000000' });
+      const url = buildDeepLinkerUrl(baseFileCtx, {
+        lineStart: hugeNumStr,
+        lineEnd: '10000000000000000000000',
+      });
       assert.ok(url);
       assert.ok(url.startsWith('https://github.com/facebook/react/blob/main/src/index.js#L'));
     });
@@ -88,33 +92,42 @@ describe('Adversarial & Edge Case Tests for src/interactive.js', () => {
       const url = buildTimeMachineUrl(baseRepoCtx, {
         baseRef: 'feature/fix-1',
         compareMode: 'ref',
-        compareRef: 'refs/tags/v1.0.0'
+        compareRef: 'refs/tags/v1.0.0',
       });
-      assert.equal(url, 'https://github.com/facebook/react/compare/feature/fix-1...refs/tags/v1.0.0');
+      assert.equal(
+        url,
+        'https://github.com/facebook/react/compare/feature/fix-1...refs/tags/v1.0.0'
+      );
     });
 
     it('inspects encoding of special characters in baseRef and compareRef', () => {
       const url = buildTimeMachineUrl(baseRepoCtx, {
         baseRef: 'main',
         compareMode: 'ref',
-        compareRef: 'v1.0.0-beta.1+build.123'
+        compareRef: 'v1.0.0-beta.1+build.123',
       });
-      assert.equal(url, 'https://github.com/facebook/react/compare/main...v1.0.0-beta.1%2Bbuild.123');
+      assert.equal(
+        url,
+        'https://github.com/facebook/react/compare/main...v1.0.0-beta.1%2Bbuild.123'
+      );
 
       // Test with spaces, hashes, and question marks (safely URL-encoded per path segment)
       const urlSpecial = buildTimeMachineUrl(baseRepoCtx, {
         baseRef: 'main',
         compareMode: 'ref',
-        compareRef: 'feature #1?query=1'
+        compareRef: 'feature #1?query=1',
       });
-      assert.equal(urlSpecial, 'https://github.com/facebook/react/compare/main...feature%20%231%3Fquery%3D1');
+      assert.equal(
+        urlSpecial,
+        'https://github.com/facebook/react/compare/main...feature%20%231%3Fquery%3D1'
+      );
     });
 
     it('handles empty and whitespace-only baseRef and compareRef', () => {
       const url1 = buildTimeMachineUrl(baseRepoCtx, {
         baseRef: '   ',
         compareMode: 'ref',
-        compareRef: '   '
+        compareRef: '   ',
       });
       // Fallback: baseRef -> parsedContext.ref ('main'), compareRef -> 'HEAD'
       assert.equal(url1, 'https://github.com/facebook/react/compare/main...HEAD');
@@ -122,7 +135,7 @@ describe('Adversarial & Edge Case Tests for src/interactive.js', () => {
       const url2 = buildTimeMachineUrl(baseRepoCtx, {
         baseRef: '',
         compareMode: 'ref',
-        compareRef: ''
+        compareRef: '',
       });
       assert.equal(url2, 'https://github.com/facebook/react/compare/main...HEAD');
     });
@@ -131,23 +144,29 @@ describe('Adversarial & Edge Case Tests for src/interactive.js', () => {
       const urlTimeframe = buildTimeMachineUrl(baseRepoCtx, {
         baseRef: 'main',
         compareMode: 'timeframe',
-        timeframe: '2.months.ago'
+        timeframe: '2.months.ago',
       });
-      assert.equal(urlTimeframe, 'https://github.com/facebook/react/compare/main@{2.months.ago}...main');
+      assert.equal(
+        urlTimeframe,
+        'https://github.com/facebook/react/compare/main@{2.months.ago}...main'
+      );
 
       const urlCustomDate = buildTimeMachineUrl(baseRepoCtx, {
         baseRef: 'dev',
         compareMode: 'custom_date',
-        customDate: '2026-01-15'
+        customDate: '2026-01-15',
       });
-      assert.equal(urlCustomDate, 'https://github.com/facebook/react/compare/dev@{2026-01-15}...dev');
+      assert.equal(
+        urlCustomDate,
+        'https://github.com/facebook/react/compare/dev@{2026-01-15}...dev'
+      );
     });
 
     it('falls back to 1.week.ago when custom date is whitespace only', () => {
       const url = buildTimeMachineUrl(baseRepoCtx, {
         baseRef: 'main',
         compareMode: 'custom_date',
-        customDate: '   '
+        customDate: '   ',
       });
       assert.equal(url, 'https://github.com/facebook/react/compare/main@{1.week.ago}...main');
     });
@@ -158,7 +177,7 @@ describe('Adversarial & Edge Case Tests for src/interactive.js', () => {
       const authorInput = '"John Doe" <john@example.com> & <script>alert(1)</script>';
       const url = buildCommitFeedUrl(baseRepoCtx, {
         refInput: 'main',
-        authorInput
+        authorInput,
       });
       assert.equal(
         url,
@@ -169,13 +188,13 @@ describe('Adversarial & Edge Case Tests for src/interactive.js', () => {
     it('handles deep nested paths and multiple leading/consecutive slashes', () => {
       const url1 = buildCommitFeedUrl(baseRepoCtx, {
         refInput: 'main',
-        pathInput: 'a/b/c/d.js'
+        pathInput: 'a/b/c/d.js',
       });
       assert.equal(url1, 'https://github.com/facebook/react/commits/main/a/b/c/d.js');
 
       const url2 = buildCommitFeedUrl(baseRepoCtx, {
         refInput: 'main',
-        pathInput: '///a//b///c///d.js'
+        pathInput: '///a//b///c///d.js',
       });
       assert.equal(url2, 'https://github.com/facebook/react/commits/main/a//b///c///d.js');
     });
@@ -183,13 +202,13 @@ describe('Adversarial & Edge Case Tests for src/interactive.js', () => {
     it('handles empty branch/ref with and without path filter', () => {
       const urlWithPath = buildCommitFeedUrl(baseRepoCtx, {
         refInput: '   ',
-        pathInput: 'src/index.js'
+        pathInput: 'src/index.js',
       });
       assert.equal(urlWithPath, 'https://github.com/facebook/react/commits/HEAD/src/index.js');
 
       const urlNoPath = buildCommitFeedUrl(baseRepoCtx, {
         refInput: '',
-        pathInput: ''
+        pathInput: '',
       });
       assert.equal(urlNoPath, 'https://github.com/facebook/react/commits');
     });
@@ -197,7 +216,7 @@ describe('Adversarial & Edge Case Tests for src/interactive.js', () => {
     it('encodes special characters in pathInput', () => {
       const url = buildCommitFeedUrl(baseRepoCtx, {
         refInput: 'main',
-        pathInput: 'src/my file #1.js'
+        pathInput: 'src/my file #1.js',
       });
       assert.equal(url, 'https://github.com/facebook/react/commits/main/src/my%20file%20%231.js');
     });
@@ -215,7 +234,7 @@ describe('Adversarial & Edge Case Tests for src/interactive.js', () => {
         lineStart: 10,
         lineEnd: 20,
         queryParams: Object.freeze({ plain: '1' }),
-        isRaw: false
+        isRaw: false,
       });
 
       assert.doesNotThrow(() => {
@@ -273,19 +292,25 @@ describe('Adversarial & Edge Case Tests for src/interactive.js', () => {
         },
         dispatchEvent(event) {
           const fns = eventListeners[event] || [];
-          fns.forEach(fn => fn({ currentTarget: mock }));
+          fns.forEach((fn) => fn({ currentTarget: mock }));
         },
         querySelector(selector) {
-          return children.find(c => c.id === selector.replace('#', '') || c.className?.includes(selector.replace('.', ''))) || null;
+          return (
+            children.find(
+              (c) =>
+                c.id === selector.replace('#', '') ||
+                c.className?.includes(selector.replace('.', ''))
+            ) || null
+          );
         },
         querySelectorAll(selector) {
-          return children.filter(c => c.className?.includes(selector.replace('.', '')));
+          return children.filter((c) => c.className?.includes(selector.replace('.', '')));
         },
         appendChild(child) {
           child.parentElement = mock;
           children.push(child);
           return child;
-        }
+        },
       };
 
       return mock;
@@ -300,8 +325,8 @@ describe('Adversarial & Edge Case Tests for src/interactive.js', () => {
         lucide: {
           createIcons() {
             throw new Error('Lucide icon failure');
-          }
-        }
+          },
+        },
       };
 
       try {
@@ -315,12 +340,13 @@ describe('Adversarial & Edge Case Tests for src/interactive.js', () => {
 
     it('handles frozen context in DOM renderer gracefully', () => {
       const mockContainer = createMockElement();
-      const frozenCtx = Object.freeze(parseGithubUrl('https://github.com/facebook/react/blob/main/src/index.js'));
+      const frozenCtx = Object.freeze(
+        parseGithubUrl('https://github.com/facebook/react/blob/main/src/index.js')
+      );
 
       assert.doesNotThrow(() => {
         renderInteractiveCards(mockContainer, frozenCtx);
       });
     });
   });
-
 });

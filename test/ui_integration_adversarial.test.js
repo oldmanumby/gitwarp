@@ -22,10 +22,16 @@ class MockElement {
     this.isFocused = false;
   }
 
-  get value() { return this._value; }
-  set value(val) { this._value = String(val ?? ''); }
+  get value() {
+    return this._value;
+  }
+  set value(val) {
+    this._value = String(val ?? '');
+  }
 
-  get textContent() { return this._textContent; }
+  get textContent() {
+    return this._textContent;
+  }
   set textContent(val) {
     this._textContent = String(val ?? '');
     this.children = [];
@@ -34,7 +40,7 @@ class MockElement {
 
   get innerHTML() {
     if (this.children.length > 0 && !this._innerHTML) {
-      return this.children.map(child => child.outerHTML).join('');
+      return this.children.map((child) => child.outerHTML).join('');
     }
     return this._innerHTML;
   }
@@ -109,13 +115,13 @@ class MockElement {
     return {
       add(...classes) {
         const current = new Set((self.className || '').split(/\s+/).filter(Boolean));
-        classes.forEach(c => current.add(c));
+        classes.forEach((c) => current.add(c));
         self.className = Array.from(current).join(' ');
         self.attributes.set('class', self.className);
       },
       remove(...classes) {
         const current = new Set((self.className || '').split(/\s+/).filter(Boolean));
-        classes.forEach(c => current.delete(c));
+        classes.forEach((c) => current.delete(c));
         self.className = Array.from(current).join(' ');
         self.attributes.set('class', self.className);
       },
@@ -127,7 +133,7 @@ class MockElement {
         else if (force === false) this.remove(c);
         else if (this.contains(c)) this.remove(c);
         else this.add(c);
-      }
+      },
     };
   }
 
@@ -137,7 +143,7 @@ class MockElement {
   }
   removeEventListener(event, fn) {
     if (!this.listeners.has(event)) return;
-    const arr = this.listeners.get(event).filter(f => f !== fn);
+    const arr = this.listeners.get(event).filter((f) => f !== fn);
     this.listeners.set(event, arr);
   }
   dispatchEvent(event) {
@@ -145,7 +151,7 @@ class MockElement {
     if (!evt.target) evt.target = this;
 
     const arr = this.listeners.get(evt.type) || [];
-    arr.forEach(fn => fn(evt));
+    arr.forEach((fn) => fn(evt));
   }
 
   appendChild(child) {
@@ -188,7 +194,9 @@ class MockElement {
 
 function matchesSelector(el, selector) {
   if (!el || !selector) return false;
-  const parts = selector.match(/#[a-zA-Z0-9_-]+|\.[a-zA-Z0-9_-]+|\[[^\]]+\]|[a-zA-Z0-9-]+/g) || [selector];
+  const parts = selector.match(/#[a-zA-Z0-9_-]+|\.[a-zA-Z0-9_-]+|\[[^\]]+\]|[a-zA-Z0-9-]+/g) || [
+    selector,
+  ];
   for (const part of parts) {
     if (part.startsWith('#')) {
       if (el.id !== part.slice(1)) return false;
@@ -235,7 +243,7 @@ function setMockNavigator(navObj) {
   Object.defineProperty(globalThis, 'navigator', {
     value: navObj,
     writable: true,
-    configurable: true
+    configurable: true,
   });
 }
 
@@ -280,13 +288,13 @@ async function setupEnvironment() {
   globalThis.document = doc;
   globalThis.window = {
     lucide: {
-      createIcons: () => {}
-    }
+      createIcons: () => {},
+    },
   };
   setMockNavigator({
     clipboard: {
-      writeText: async () => Promise.resolve()
-    }
+      writeText: async () => Promise.resolve(),
+    },
   });
 
   // Transform main.js to remove style.css and use absolute file URLs for local modules
@@ -310,7 +318,8 @@ async function setupEnvironment() {
     .replace("'./interactive.js'", `'${interactiveUrl}'`);
 
   const nonce = Math.random().toString(36).substring(2) + Date.now();
-  const dataUri = 'data:text/javascript;charset=utf-8,' + encodeURIComponent(mainJsCode) + '#' + nonce;
+  const dataUri =
+    'data:text/javascript;charset=utf-8,' + encodeURIComponent(mainJsCode) + '#' + nonce;
   await import(dataUri);
 
   return {
@@ -321,14 +330,12 @@ async function setupEnvironment() {
     contextBadge,
     cardsGrid,
     interactiveContainer,
-    toast
+    toast,
   };
 }
 
 describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
-
   describe('1. Input Sequence Transitions', () => {
-
     it('handles full sequence: valid Repo -> valid File -> invalid URL -> empty string -> raw domain', async () => {
       const {
         doc,
@@ -337,7 +344,7 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
         errorMessage,
         contextBadge,
         cardsGrid,
-        interactiveContainer
+        interactiveContainer,
       } = await setupEnvironment();
 
       // State 0: Initial render state (Empty input)
@@ -350,7 +357,7 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
       // Step 1: Pasting valid Repo URL
       repoInput.value = 'https://github.com/facebook/react';
       repoInput.dispatchEvent('paste');
-      
+
       assert.equal(contextBadge.textContent, 'Repo');
       assert.ok(contextBadge.classList.contains('context-repo'));
       assert.ok(contextBadge.classList.contains('active'));
@@ -369,7 +376,11 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
       assert.ok(contextBadge.classList.contains('active'));
       assert.equal(errorMessage.textContent, '');
       assert.ok(cardsGrid.innerHTML.includes('data-card-id="raw_file"'));
-      assert.ok(cardsGrid.innerHTML.includes('https://raw.githubusercontent.com/facebook/react/main/package.json'));
+      assert.ok(
+        cardsGrid.innerHTML.includes(
+          'https://raw.githubusercontent.com/facebook/react/main/package.json'
+        )
+      );
       assert.ok(interactiveContainer.innerHTML.includes('data-card-id="deep_linker"'));
 
       // Step 3: Pasting invalid URL
@@ -379,9 +390,16 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
       assert.equal(contextBadge.textContent, 'Unknown');
       assert.ok(contextBadge.classList.contains('context-unknown'));
       assert.ok(contextBadge.classList.contains('inactive'));
-      assert.equal(errorMessage.textContent, 'Please enter a valid GitHub URL (e.g., https://github.com/owner/repo)');
+      assert.equal(
+        errorMessage.textContent,
+        'Please enter a valid GitHub URL (e.g., https://github.com/owner/repo)'
+      );
       assert.ok(cardsGrid.innerHTML.includes('Enter a valid GitHub URL above'));
-      assert.ok(interactiveContainer.innerHTML.includes('Enter a valid GitHub URL to unlock interactive tools'));
+      assert.ok(
+        interactiveContainer.innerHTML.includes(
+          'Enter a valid GitHub URL to unlock interactive tools'
+        )
+      );
 
       // Step 4: Transition to empty string via Clear Button click
       clearBtn.dispatchEvent('click');
@@ -393,7 +411,11 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
       assert.ok(contextBadge.classList.contains('inactive'));
       assert.equal(errorMessage.textContent, '');
       assert.ok(cardsGrid.innerHTML.includes('Enter a valid GitHub URL above'));
-      assert.ok(interactiveContainer.innerHTML.includes('Enter a valid GitHub URL to unlock interactive tools'));
+      assert.ok(
+        interactiveContainer.innerHTML.includes(
+          'Enter a valid GitHub URL to unlock interactive tools'
+        )
+      );
 
       // Step 5: Pasting raw domain URL
       repoInput.value = 'https://raw.githubusercontent.com/facebook/react/main/src/index.js';
@@ -406,25 +428,18 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
       assert.ok(cardsGrid.innerHTML.includes('data-card-id="raw_file"'));
       assert.ok(interactiveContainer.innerHTML.includes('data-card-id="deep_linker"'));
     });
-
   });
 
   describe('2. Rapid Input Events & Synchronization Resilience', () => {
-
     it('resists rapid event firing (input, paste, keyup) without race conditions or corrupt state', async () => {
-      const {
-        repoInput,
-        contextBadge,
-        errorMessage,
-        cardsGrid
-      } = await setupEnvironment();
+      const { repoInput, contextBadge, errorMessage, cardsGrid } = await setupEnvironment();
 
       const urls = [
         'https://github.com/torvalds/linux',
         'https://github.com/torvalds/linux/blob/master/README',
         'invalid-url-123',
         '',
-        'https://github.com/vuejs/core'
+        'https://github.com/vuejs/core',
       ];
 
       // Rapidly fire input, paste, and keyup events in quick succession
@@ -437,7 +452,7 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
       }
 
       // Wait for paste event setTimeout(handleInput, 10) to finish
-      await new Promise(resolve => setTimeout(resolve, 30));
+      await new Promise((resolve) => setTimeout(resolve, 30));
 
       // Final state must strictly reflect the last URL ('https://github.com/vuejs/core')
       assert.equal(repoInput.value, 'https://github.com/vuejs/core');
@@ -457,16 +472,14 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
       repoInput.dispatchEvent('input');
 
       // Wait for paste timeout
-      await new Promise(resolve => setTimeout(resolve, 30));
+      await new Promise((resolve) => setTimeout(resolve, 30));
 
       // Must be File context from final input value
       assert.equal(contextBadge.textContent, 'File');
     });
-
   });
 
   describe('3. Clipboard Fallback Handling', () => {
-
     it('invokes navigator.clipboard.writeText when clipboard API is available and resolves', async () => {
       const { doc, repoInput, toast } = await setupEnvironment();
 
@@ -476,8 +489,8 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
           writeText: async (text) => {
             copiedText = text;
             return Promise.resolve();
-          }
-        }
+          },
+        },
       });
 
       repoInput.value = 'https://github.com/facebook/react';
@@ -491,7 +504,7 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
       doc.dispatchEvent({ type: 'click', target: copyBtn });
 
       // Wait for promise resolution
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       assert.ok(copiedText.includes('facebook/react'));
       assert.ok(toast.classList.contains('show'));
@@ -523,8 +536,8 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
       // Simulate rejection from clipboard permission failure
       setMockNavigator({
         clipboard: {
-          writeText: async () => Promise.reject(new Error('Permission denied by user'))
-        }
+          writeText: async () => Promise.reject(new Error('Permission denied by user')),
+        },
       });
 
       repoInput.value = 'https://github.com/facebook/react';
@@ -536,7 +549,7 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
       doc.dispatchEvent({ type: 'click', target: copyBtn });
 
       // Wait for rejection handler (.catch)
-      await new Promise(resolve => setTimeout(resolve, 20));
+      await new Promise((resolve) => setTimeout(resolve, 20));
 
       assert.ok(toast.classList.contains('show'));
     });
@@ -550,8 +563,8 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
           writeText: async () => {
             writeCalled = true;
             return Promise.resolve();
-          }
-        }
+          },
+        },
       });
 
       // Set to Repo context so that cards requiring File context (like Raw File) are disabled
@@ -566,10 +579,14 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
 
       doc.dispatchEvent({ type: 'click', target: disabledBtn });
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       assert.equal(writeCalled, false, 'writeText should not be called for disabled button');
-      assert.equal(toast.classList.contains('show'), false, 'Toast should not be shown for disabled button');
+      assert.equal(
+        toast.classList.contains('show'),
+        false,
+        'Toast should not be shown for disabled button'
+      );
     });
 
     it('ignores click events on random non-copy DOM elements', async () => {
@@ -581,8 +598,8 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
           writeText: async () => {
             writeCalled = true;
             return Promise.resolve();
-          }
-        }
+          },
+        },
       });
 
       toast.classList.remove('show');
@@ -593,11 +610,9 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
       assert.equal(writeCalled, false);
       assert.equal(toast.classList.contains('show'), false);
     });
-
   });
 
   describe('4. Edge Cases & Resilience', () => {
-
     it('handles extremely long URL strings (10,000+ chars) safely', async () => {
       const { repoInput, errorMessage, contextBadge } = await setupEnvironment();
 
@@ -616,7 +631,10 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
       repoInput.value = '<script>alert(1)</script>';
       repoInput.dispatchEvent('input');
 
-      assert.equal(errorMessage.textContent, 'Please enter a valid GitHub URL (e.g., https://github.com/owner/repo)');
+      assert.equal(
+        errorMessage.textContent,
+        'Please enter a valid GitHub URL (e.g., https://github.com/owner/repo)'
+      );
       assert.ok(!cardsGrid.innerHTML.includes('<script>alert(1)</script>'));
 
       // Test URL containing script tag (URL encoded safely)
@@ -627,7 +645,5 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
       assert.ok(!cardsGrid.innerHTML.includes('<script>alert(1)</script>'));
       assert.ok(cardsGrid.innerHTML.includes('%3Cscript%3Ealert(1)%3C'));
     });
-
   });
-
 });

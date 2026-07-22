@@ -25,13 +25,14 @@ export function isInteractiveCardCompatible(cardId, parsedContext) {
   if (!parsedContext || typeof parsedContext !== 'object' || !parsedContext.valid) {
     return false;
   }
-  const id = typeof cardId === 'string' ? cardId : (cardId && typeof cardId === 'object' ? cardId.id : null);
+  const id =
+    typeof cardId === 'string' ? cardId : cardId && typeof cardId === 'object' ? cardId.id : null;
   if (!id) return false;
 
   const allowedContexts = {
     deep_linker: ['File'],
     time_machine: ['Repo', 'File'],
-    commit_feed: ['Repo', 'File']
+    commit_feed: ['Repo', 'File'],
   };
 
   const allowed = allowedContexts[id];
@@ -48,7 +49,12 @@ export function isInteractiveCardCompatible(cardId, parsedContext) {
  * @returns {string|null}
  */
 export function buildDeepLinkerUrl(parsedContext, options = {}) {
-  if (!parsedContext || typeof parsedContext !== 'object' || !parsedContext.valid || parsedContext.context !== 'File') {
+  if (
+    !parsedContext ||
+    typeof parsedContext !== 'object' ||
+    !parsedContext.valid ||
+    parsedContext.context !== 'File'
+  ) {
     return null;
   }
   const { owner, repo, ref, filePath } = parsedContext;
@@ -147,7 +153,10 @@ function safeEncodeRef(refStr) {
   if (refStr === null || refStr === undefined) return '';
   const str = String(refStr).trim();
   if (!str) return '';
-  return str.split('/').map(segment => encodeURIComponent(segment)).join('/');
+  return str
+    .split('/')
+    .map((segment) => encodeURIComponent(segment))
+    .join('/');
 }
 
 /**
@@ -168,9 +177,10 @@ export function buildTimeMachineUrl(parsedContext, options = {}) {
   if (!owner || !repo) return null;
 
   const opts = options || {};
-  const rawBaseRef = (opts.baseRef !== undefined && opts.baseRef !== null && String(opts.baseRef).trim())
-    ? String(opts.baseRef).trim()
-    : (parsedContext.ref || 'main');
+  const rawBaseRef =
+    opts.baseRef !== undefined && opts.baseRef !== null && String(opts.baseRef).trim()
+      ? String(opts.baseRef).trim()
+      : parsedContext.ref || 'main';
 
   const baseRef = safeEncodeRef(rawBaseRef);
 
@@ -178,14 +188,16 @@ export function buildTimeMachineUrl(parsedContext, options = {}) {
   let compareTarget = '';
 
   if (compareMode === 'timeframe') {
-    const timeframe = (opts.timeframe !== undefined && opts.timeframe !== null && String(opts.timeframe).trim())
-      ? String(opts.timeframe).trim()
-      : '1.week.ago';
+    const timeframe =
+      opts.timeframe !== undefined && opts.timeframe !== null && String(opts.timeframe).trim()
+        ? String(opts.timeframe).trim()
+        : '1.week.ago';
     compareTarget = `${baseRef}@{${timeframe}}...${baseRef}`;
   } else if (compareMode === 'custom_date') {
-    const dateVal = (opts.customDate !== undefined && opts.customDate !== null && String(opts.customDate).trim())
-      ? String(opts.customDate).trim()
-      : '';
+    const dateVal =
+      opts.customDate !== undefined && opts.customDate !== null && String(opts.customDate).trim()
+        ? String(opts.customDate).trim()
+        : '';
     if (dateVal) {
       compareTarget = `${baseRef}@{${dateVal}}...${baseRef}`;
     } else {
@@ -193,9 +205,10 @@ export function buildTimeMachineUrl(parsedContext, options = {}) {
     }
   } else {
     // Default: Ref mode ('ref')
-    const rawCompareRef = (opts.compareRef !== undefined && opts.compareRef !== null && String(opts.compareRef).trim())
-      ? String(opts.compareRef).trim()
-      : '';
+    const rawCompareRef =
+      opts.compareRef !== undefined && opts.compareRef !== null && String(opts.compareRef).trim()
+        ? String(opts.compareRef).trim()
+        : '';
     if (rawCompareRef) {
       compareTarget = `${baseRef}...${safeEncodeRef(rawCompareRef)}`;
     } else {
@@ -207,7 +220,8 @@ export function buildTimeMachineUrl(parsedContext, options = {}) {
 
   // File path filter handling
   const includeFilePath = opts.includeFilePath !== undefined ? Boolean(opts.includeFilePath) : true;
-  const pathValue = opts.filePath || opts.pathInput || (parsedContext.context === 'File' ? filePath : null);
+  const pathValue =
+    opts.filePath || opts.pathInput || (parsedContext.context === 'File' ? filePath : null);
 
   if (includeFilePath && pathValue) {
     baseUrl += `?path=${encodeURIComponent(pathValue)}`;
@@ -235,17 +249,20 @@ export function buildCommitFeedUrl(parsedContext, options = {}) {
 
   const opts = options || {};
 
-  const ref = opts.refInput !== undefined && opts.refInput !== null
-    ? String(opts.refInput).trim()
-    : (parsedContext.ref || '').trim();
+  const ref =
+    opts.refInput !== undefined && opts.refInput !== null
+      ? String(opts.refInput).trim()
+      : (parsedContext.ref || '').trim();
 
-  const rawPath = opts.pathInput !== undefined && opts.pathInput !== null
-    ? String(opts.pathInput).trim()
-    : (parsedContext.filePath || '').trim();
+  const rawPath =
+    opts.pathInput !== undefined && opts.pathInput !== null
+      ? String(opts.pathInput).trim()
+      : (parsedContext.filePath || '').trim();
 
-  const author = opts.authorInput !== undefined && opts.authorInput !== null
-    ? String(opts.authorInput).trim()
-    : (parsedContext.queryParams?.author || '').trim();
+  const author =
+    opts.authorInput !== undefined && opts.authorInput !== null
+      ? String(opts.authorInput).trim()
+      : (parsedContext.queryParams?.author || '').trim();
 
   const cleanPath = rawPath.replace(/^\/+/, '');
 
@@ -278,7 +295,12 @@ export function buildCommitFeedUrl(parsedContext, options = {}) {
 export function renderInteractiveCards(containerEl, parsedContext) {
   if (!containerEl || typeof containerEl !== 'object') return;
 
-  const isContextValid = Boolean(parsedContext && typeof parsedContext === 'object' && parsedContext.valid && parsedContext.context !== 'Unknown');
+  const isContextValid = Boolean(
+    parsedContext &&
+    typeof parsedContext === 'object' &&
+    parsedContext.valid &&
+    parsedContext.context !== 'Unknown'
+  );
 
   if (!isContextValid) {
     containerEl.innerHTML = '';
@@ -384,13 +406,17 @@ export function renderInteractiveCards(containerEl, parsedContext) {
             <label for="time-custom-date">Custom Date</label>
             <input type="date" id="time-custom-date" class="interactive-input" ${isTimeMachine ? '' : 'disabled'}>
           </div>
-          ${parsedContext.context === 'File' && parsedContext.filePath ? `
+          ${
+            parsedContext.context === 'File' && parsedContext.filePath
+              ? `
           <div class="form-group checkbox-group">
             <label class="checkbox-label">
               <input type="checkbox" id="time-include-path" class="interactive-checkbox" checked ${isTimeMachine ? '' : 'disabled'}>
               Filter diff to file path (<code>${escapeHtml(parsedContext.filePath)}</code>)
             </label>
-          </div>` : ''}
+          </div>`
+              : ''
+          }
         </div>
 
         <div class="card-link-container interactive-output">
@@ -467,7 +493,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
       const url = buildDeepLinkerUrl(parsedContext, {
         lineStart: deepStart ? deepStart.value : undefined,
         lineEnd: deepEnd ? deepEnd.value : undefined,
-        plainToggle: deepPlain ? deepPlain.checked : false
+        plainToggle: deepPlain ? deepPlain.checked : false,
       });
       if (deepLink) {
         deepLink.href = url || '#';
@@ -481,7 +507,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
       }
     };
 
-    [deepStart, deepEnd, deepPlain].forEach(el => {
+    [deepStart, deepEnd, deepPlain].forEach((el) => {
       if (el) {
         el.addEventListener('input', updateDeepLinker);
         el.addEventListener('change', updateDeepLinker);
@@ -518,7 +544,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
         compareRef: compareRef ? compareRef.value : undefined,
         timeframe: timeframe ? timeframe.value : undefined,
         customDate: customDate ? customDate.value : undefined,
-        includeFilePath: includePath ? includePath.checked : false
+        includeFilePath: includePath ? includePath.checked : false,
       });
 
       if (timeLink) {
@@ -533,7 +559,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
       }
     };
 
-    [baseRef, compareMode, compareRef, timeframe, customDate, includePath].forEach(el => {
+    [baseRef, compareMode, compareRef, timeframe, customDate, includePath].forEach((el) => {
       if (el) {
         el.addEventListener('input', updateTimeMachine);
         el.addEventListener('change', updateTimeMachine);
@@ -552,7 +578,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
       const url = buildCommitFeedUrl(parsedContext, {
         refInput: commitRef ? commitRef.value : undefined,
         authorInput: commitAuthor ? commitAuthor.value : undefined,
-        pathInput: commitPath ? commitPath.value : undefined
+        pathInput: commitPath ? commitPath.value : undefined,
       });
 
       if (commitLink) {
@@ -567,7 +593,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
       }
     };
 
-    [commitRef, commitAuthor, commitPath].forEach(el => {
+    [commitRef, commitAuthor, commitPath].forEach((el) => {
       if (el) {
         el.addEventListener('input', updateCommitFeed);
         el.addEventListener('change', updateCommitFeed);
@@ -577,7 +603,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
 
   // Copy button click listener for interactive cards
   const copyBtns = containerEl.querySelectorAll('.copy-btn');
-  copyBtns.forEach(btn => {
+  copyBtns.forEach((btn) => {
     btn.addEventListener('click', (e) => {
       const targetBtn = e.currentTarget;
       const url = targetBtn.getAttribute('data-url');

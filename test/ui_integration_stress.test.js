@@ -22,10 +22,16 @@ class MockElement {
     this.isFocused = false;
   }
 
-  get value() { return this._value; }
-  set value(val) { this._value = val === null || val === undefined ? '' : String(val); }
+  get value() {
+    return this._value;
+  }
+  set value(val) {
+    this._value = val === null || val === undefined ? '' : String(val);
+  }
 
-  get textContent() { return this._textContent; }
+  get textContent() {
+    return this._textContent;
+  }
   set textContent(val) {
     this._textContent = val === null || val === undefined ? '' : String(val);
     this.children = [];
@@ -34,7 +40,7 @@ class MockElement {
 
   get innerHTML() {
     if (this.children.length > 0) {
-      return this.children.map(child => child.outerHTML).join('');
+      return this.children.map((child) => child.outerHTML).join('');
     }
     return this._innerHTML;
   }
@@ -108,13 +114,13 @@ class MockElement {
     return {
       add(...classes) {
         const current = new Set((self.className || '').split(/\s+/).filter(Boolean));
-        classes.forEach(c => current.add(c));
+        classes.forEach((c) => current.add(c));
         self.className = Array.from(current).join(' ');
         self.attributes.set('class', self.className);
       },
       remove(...classes) {
         const current = new Set((self.className || '').split(/\s+/).filter(Boolean));
-        classes.forEach(c => current.delete(c));
+        classes.forEach((c) => current.delete(c));
         self.className = Array.from(current).join(' ');
         self.attributes.set('class', self.className);
       },
@@ -126,7 +132,7 @@ class MockElement {
         else if (force === false) this.remove(c);
         else if (this.contains(c)) this.remove(c);
         else this.add(c);
-      }
+      },
     };
   }
 
@@ -136,7 +142,7 @@ class MockElement {
   }
   removeEventListener(event, fn) {
     if (!this.listeners.has(event)) return;
-    const arr = this.listeners.get(event).filter(f => f !== fn);
+    const arr = this.listeners.get(event).filter((f) => f !== fn);
     this.listeners.set(event, arr);
   }
   dispatchEvent(event) {
@@ -144,7 +150,7 @@ class MockElement {
     if (!evt.target) evt.target = this;
 
     const arr = this.listeners.get(evt.type) || [];
-    arr.forEach(fn => fn(evt));
+    arr.forEach((fn) => fn(evt));
   }
 
   appendChild(child) {
@@ -187,7 +193,9 @@ class MockElement {
 
 function matchesSelector(el, selector) {
   if (!el || !selector) return false;
-  const parts = selector.match(/#[a-zA-Z0-9_-]+|\.[a-zA-Z0-9_-]+|\[[^\]]+\]|[a-zA-Z0-9-]+/g) || [selector];
+  const parts = selector.match(/#[a-zA-Z0-9_-]+|\.[a-zA-Z0-9_-]+|\[[^\]]+\]|[a-zA-Z0-9-]+/g) || [
+    selector,
+  ];
   for (const part of parts) {
     if (part.startsWith('#')) {
       if (el.id !== part.slice(1)) return false;
@@ -269,14 +277,14 @@ async function setupEnv() {
 
   globalThis.document = doc;
   globalThis.window = {
-    lucide: { createIcons: () => {} }
+    lucide: { createIcons: () => {} },
   };
   Object.defineProperty(globalThis, 'navigator', {
     value: {
-      clipboard: { writeText: async () => Promise.resolve() }
+      clipboard: { writeText: async () => Promise.resolve() },
     },
     writable: true,
-    configurable: true
+    configurable: true,
   });
 
   const mainJsPath = path.resolve('./src/main.js');
@@ -299,7 +307,8 @@ async function setupEnv() {
     .replace("'./interactive.js'", `'${interactiveUrl}'`);
 
   const nonce = Math.random().toString(36).substring(2) + Date.now();
-  const dataUri = 'data:text/javascript;charset=utf-8,' + encodeURIComponent(mainJsCode) + '#' + nonce;
+  const dataUri =
+    'data:text/javascript;charset=utf-8,' + encodeURIComponent(mainJsCode) + '#' + nonce;
   await import(dataUri);
 
   return {
@@ -310,12 +319,11 @@ async function setupEnv() {
     contextBadge,
     cardsGrid,
     interactiveContainer,
-    toast
+    toast,
   };
 }
 
 describe('Empirical UI Stress Test Harness', () => {
-
   describe('1. Null/Undefined & Falsy Input Handlers', () => {
     it('handles setting repoInput.value to empty, whitespace, null, or undefined', async () => {
       const { repoInput, errorMessage, contextBadge, cardsGrid } = await setupEnv();
@@ -368,7 +376,8 @@ describe('Empirical UI Stress Test Harness', () => {
 
   describe('3. Invalid URLs & Malicious Payload Stress', () => {
     it('handles various non-GitHub and invalid URL formats seamlessly', async () => {
-      const { repoInput, errorMessage, contextBadge, cardsGrid, interactiveContainer } = await setupEnv();
+      const { repoInput, errorMessage, contextBadge, cardsGrid, interactiveContainer } =
+        await setupEnv();
 
       const invalidInputs = [
         'http://google.com',
@@ -380,18 +389,29 @@ describe('Empirical UI Stress Test Harness', () => {
         'https://github.com///',
         'not-a-url',
         'https://github.com/settings/profile',
-        'https://github.com/explore'
+        'https://github.com/explore',
       ];
 
       for (const invalidInput of invalidInputs) {
         repoInput.value = invalidInput;
         repoInput.dispatchEvent('input');
 
-        assert.equal(contextBadge.textContent, 'Unknown', `Expected Unknown context for: ${invalidInput}`);
+        assert.equal(
+          contextBadge.textContent,
+          'Unknown',
+          `Expected Unknown context for: ${invalidInput}`
+        );
         assert.equal(contextBadge.className, 'context-badge context-unknown inactive');
-        assert.equal(errorMessage.textContent, 'Please enter a valid GitHub URL (e.g., https://github.com/owner/repo)');
+        assert.equal(
+          errorMessage.textContent,
+          'Please enter a valid GitHub URL (e.g., https://github.com/owner/repo)'
+        );
         assert.ok(cardsGrid.innerHTML.includes('Enter a valid GitHub URL above'));
-        assert.ok(interactiveContainer.innerHTML.includes('Enter a valid GitHub URL to unlock interactive tools'));
+        assert.ok(
+          interactiveContainer.innerHTML.includes(
+            'Enter a valid GitHub URL to unlock interactive tools'
+          )
+        );
       }
     });
   });
@@ -415,7 +435,7 @@ describe('Empirical UI Stress Test Harness', () => {
       repoInput.dispatchEvent('paste');
 
       // Wait 50ms for all pending timeouts to complete
-      await new Promise(resolve => setTimeout(resolve, 50));
+      await new Promise((resolve) => setTimeout(resolve, 50));
 
       assert.equal(contextBadge.textContent, 'Repo');
       assert.ok(cardsGrid.innerHTML.includes('https://bolt.new/github.com/owner/repo'));
@@ -430,10 +450,16 @@ describe('Empirical UI Stress Test Harness', () => {
         { url: 'https://github.com/octocat', context: 'User' },
         { url: 'https://github.com/octocat/Spoon-Knife', context: 'Repo' },
         { url: 'https://github.com/octocat/Spoon-Knife/blob/main/index.html', context: 'File' },
-        { url: 'https://github.com/octocat/Spoon-Knife/commit/7fd1a60b01f91b314f59955a4e4d4e80d8edf11d', context: 'Commit' },
+        {
+          url: 'https://github.com/octocat/Spoon-Knife/commit/7fd1a60b01f91b314f59955a4e4d4e80d8edf11d',
+          context: 'Commit',
+        },
         { url: 'https://github.com/octocat/Spoon-Knife/pull/15', context: 'PR' },
-        { url: 'https://raw.githubusercontent.com/octocat/Spoon-Knife/main/index.html', context: 'File' },
-        { url: '', context: 'Unknown' }
+        {
+          url: 'https://raw.githubusercontent.com/octocat/Spoon-Knife/main/index.html',
+          context: 'File',
+        },
+        { url: '', context: 'Unknown' },
       ];
 
       for (const step of sequence) {
@@ -457,7 +483,10 @@ describe('Empirical UI Stress Test Harness', () => {
 
       repoInput.value = 'invalid-url-here';
       repoInput.dispatchEvent('input');
-      assert.equal(errorMessage.textContent, 'Please enter a valid GitHub URL (e.g., https://github.com/owner/repo)');
+      assert.equal(
+        errorMessage.textContent,
+        'Please enter a valid GitHub URL (e.g., https://github.com/owner/repo)'
+      );
 
       // Click clear button
       clearBtn.dispatchEvent('click');
@@ -469,5 +498,4 @@ describe('Empirical UI Stress Test Harness', () => {
       assert.ok(cardsGrid.innerHTML.includes('Enter a valid GitHub URL above'));
     });
   });
-
 });
