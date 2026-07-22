@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build:docs": "blume build --base /docs && mv dist docs_temp",
+    "build:app": "vite build",
+    "build": "bun run build:docs && bun run build:app && mv docs_temp dist/docs",
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
