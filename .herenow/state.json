@@ -29,6 +29,12 @@
       "claimToken": "6e49c8b1e02b71e99da4b59cf0b1ae9dc5641047b0a1fd53f74a0c283ba6bcf5",
       "claimUrl": "https://here.now/claim?slug=inner-castle-ry2r&token=6e49c8b1e02b71e99da4b59cf0b1ae9dc5641047b0a1fd53f74a0c283ba6bcf5",
       "expiresAt": "2026-07-23T13:50:33.240Z"
+    },
+    "graceful-anvil-jk3q": {
+      "siteUrl": "https://graceful-anvil-jk3q.here.now/",
+      "claimToken": "56b308c98936e4fe4af952cf75dbf72ca6f083a107c49451415f1f84b5b2ac38",
+      "claimUrl": "https://here.now/claim?slug=graceful-anvil-jk3q&token=56b308c98936e4fe4af952cf75dbf72ca6f083a107c49451415f1f84b5b2ac38",
+      "expiresAt": "2026-07-23T14:06:53.513Z"
     }
   }
 }
