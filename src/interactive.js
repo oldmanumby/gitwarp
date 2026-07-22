@@ -283,7 +283,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
   if (!isContextValid) {
     containerEl.innerHTML = `
       <div class="interactive-section-title">
-        <h2><i data-lucide="sliders"></i> Interactive Tools</h2>
+        <h2>Interactive Tools</h2>
       </div>
       <div class="interactive-grid">
         <div class="card glass card-interactive disabled" style="text-align: center; color: var(--color-muted); padding: 2rem;">
@@ -304,16 +304,16 @@ export function renderInteractiveCards(containerEl, parsedContext) {
 
   const html = `
     <div class="interactive-section-title">
-      <h2><i data-lucide="sliders"></i> Interactive Tools</h2>
+      <h2>Interactive Tools</h2>
     </div>
     <div class="interactive-grid">
       <!-- Deep Linker Card -->
       <div class="card glass card-interactive ${isDeepLinker ? 'active' : 'disabled'}" data-card-id="deep_linker">
         <div class="card-header">
-          <div class="card-icon"><i data-lucide="file-text"></i></div>
+          <div class="card-icon"><i data-lucide="sliders"></i></div>
           <div class="card-header-text">
             <h3 class="card-title">Deep Linker</h3>
-            <span class="context-badge ${isDeepLinker ? 'active' : 'inactive'}">
+            <span class="context-badge ${isDeepLinker ? 'active context-file' : 'context-mismatch'}">
               ${isDeepLinker ? 'File Context' : 'Context Mismatch'}
             </span>
           </div>
@@ -354,7 +354,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
           <div class="card-icon"><i data-lucide="history"></i></div>
           <div class="card-header-text">
             <h3 class="card-title">Time Machine Compare</h3>
-            <span class="context-badge ${isTimeMachine ? 'active' : 'inactive'}">
+            <span class="context-badge ${isTimeMachine ? 'active context-' + escapeHtml(parsedContext.context.toLowerCase()) : 'context-mismatch'}">
               ${isTimeMachine ? escapeHtml(parsedContext.context) + ' Context' : 'Context Mismatch'}
             </span>
           </div>
@@ -417,7 +417,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
           <div class="card-icon"><i data-lucide="git-commit"></i></div>
           <div class="card-header-text">
             <h3 class="card-title">Commit Feed</h3>
-            <span class="context-badge ${isCommitFeed ? 'active' : 'inactive'}">
+            <span class="context-badge ${isCommitFeed ? 'active context-' + escapeHtml(parsedContext.context.toLowerCase()) : 'context-mismatch'}">
               ${isCommitFeed ? escapeHtml(parsedContext.context) + ' Context' : 'Context Mismatch'}
             </span>
           </div>

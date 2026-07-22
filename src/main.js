@@ -90,7 +90,6 @@ function safeCreateIcons() {
 const repoInput = document.getElementById('repo-input');
 const clearBtn = document.getElementById('clear-btn');
 const errorMessage = document.getElementById('error-message');
-const contextBadge = document.getElementById('context-badge');
 const cardsGrid = document.getElementById('cards-grid');
 const interactiveContainer = document.getElementById('interactive-container');
 const toast = document.getElementById('toast');
@@ -108,19 +107,22 @@ function showToast(message = 'Copied to clipboard!') {
 }
 
 function updateContextBadge(parsedContext) {
-  if (!contextBadge) return;
+  const types = ['repo', 'user', 'file', 'commit', 'pr', 'unknown'];
   const contextName = (parsedContext && parsedContext.valid && parsedContext.context !== 'Unknown')
-    ? parsedContext.context
-    : 'Unknown';
+    ? parsedContext.context.toLowerCase()
+    : 'unknown';
 
-  contextBadge.textContent = contextName;
-  const lowerCtx = contextName.toLowerCase();
-  
-  if (contextName !== 'Unknown') {
-    contextBadge.className = `context-badge active context-${lowerCtx}`;
-  } else {
-    contextBadge.className = 'context-badge context-unknown inactive';
-  }
+  types.forEach(type => {
+    const badge = document.getElementById(`badge-${type}`);
+    if (!badge) return;
+    if (type === contextName) {
+      badge.classList.remove('inactive');
+      badge.classList.add('active');
+    } else {
+      badge.classList.remove('active');
+      badge.classList.add('inactive');
+    }
+  });
 }
 
 function renderStandardCards(parsedContext) {
@@ -169,7 +171,7 @@ function renderStandardCards(parsedContext) {
         </div>
         <h3 class="card-title">${escapeHtml(card.name)}</h3>
         <div class="card-link-container" style="opacity: 0.5;">
-          <span class="card-link" style="color: var(--color-muted); font-style: italic;">Requires ${escapeHtml(card.allowedContexts.join('/'))} context</span>
+          <span class="card-link" style="color: var(--color-error); font-style: italic;">Requires ${escapeHtml(card.allowedContexts.join('/'))} context</span>
           <button class="copy-btn" data-url="" disabled aria-label="Copy ${escapeHtml(card.name)} link">
             <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
           </button>

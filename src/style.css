@@ -135,6 +135,7 @@ a:hover {
   border-radius: 8px;
   text-align: center;
   margin-bottom: 3rem;
+  border: 1px solid var(--text-heading);
 }
 
 .input-wrapper {
@@ -183,6 +184,19 @@ a:hover {
   text-align: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   position: relative;
+  border: 1px solid transparent;
+}
+
+.card.active {
+  border: 1px solid var(--color-success);
+}
+
+.card.active .card-link {
+  color: var(--color-success);
+}
+
+.card.disabled {
+  border: 1px solid var(--color-error);
 }
 
 .card:hover {
@@ -331,6 +345,7 @@ a:hover {
   text-align: center;
   max-width: 800px;
   margin: 0 auto 2rem;
+  border: 1px solid var(--text-heading);
 }
 
 .contribute-section p {
@@ -343,7 +358,7 @@ a:hover {
   grid-column: 1 / -1;
   margin-top: 2.5rem;
   margin-bottom: 1rem;
-  text-align: left;
+  text-align: center;
 }
 
 .interactive-grid {
@@ -411,6 +426,7 @@ a:hover {
 .context-badge.inactive, .context-badge.context-unknown {
   background-color: oklch(0.25 0.03 255);
   color: oklch(0.65 0.02 255);
+  opacity: 0.5;
 }
 
 .context-badge.context-user {
@@ -436,6 +452,11 @@ a:hover {
 .context-badge.context-pr {
   background-color: oklch(0.35 0.14 320);
   color: oklch(0.98 0.02 320);
+}
+
+.context-badge.context-mismatch {
+  background-color: oklch(0.35 0.14 25);
+  color: oklch(0.98 0.02 25);
 }
 
 .card.disabled {
@@ -491,6 +512,7 @@ a:hover {
   font-size: 0.9rem;
   outline: none;
   transition: border-color 0.2s ease;
+  height: 42px;
 }
 
 .interactive-input:focus, .interactive-select:focus {
