@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- **Project Renamed:** Officially renamed the project from `gitswapForged` to **GitWarp** across all files, configuration, and interfaces.
 - **26 Swappable URL Tricks**: Expanded the registry of GitHub URL swaps from 13 to 26, including `.keys`, `.gpg`, `.patch`, `.diff`, `releases.atom`, `.zip`, and multiple cloud IDEs.
 - **Context Parser Engine**: Automatically parses pasted GitHub URLs and determines the current context (User, Repo, File, Commit, PR, Unknown).
 - **Interactive Tools**:

@@ -1,6 +1,6 @@
 ![Apps-reForged-Logo](Apps-reForged.png)
 
-# gitswapForged
+# GitWarp
 
 A clean, client-side web application that acts as an interactive version of a GitHub URL-Swap. Users can paste a GitHub repository URL, and the app will dynamically generate a grid of cards providing "swapped" URLs that unlock different superpowers for that repository.
 
@@ -24,7 +24,7 @@ This project is built using vanilla JavaScript and Vite.
 **1. Clone the repository and navigate into it:**
 
 ```bash
-cd APP-gitswapForged
+cd APP-GitWarp
 ```
 
 **2. Install dependencies:**
