@@ -1,0 +1,47 @@
+---
+title: 'Interactive Tools'
+description: 'Documentation for the advanced interactive tools.'
+---
+
+# Interactive Tools
+
+While the Standard Trick Cards provide instant, static URL swaps, some GitHub navigation tasks require dynamic inputs. For deeper repository manipulation, GitWarp offers three advanced **Interactive Cards**. These tools dynamically update and re-format your generated URL in real-time as you tweak parameters in the UI.
+
+## 1. Deep Linker
+
+The Deep Linker is designed to help you pinpoint exact locations within a file and share them cleanly. It allows you to target precise code line numbers, highlight line ranges, and toggle raw text views without ever having to manually type out URL hashes.
+
+**Requirements:** `File` context URL.
+
+**Interactive Options:**
+
+- **Line Start:** Specify the starting line number you want to highlight. As you type, GitWarp appends `#L[number]` to the URL.
+- **Line End:** Specify the ending line number to create a highlighted range. If both a start and end are provided, GitWarp builds a `#L[start]-L[end]` hash (e.g., `#L10-L25`), which forces GitHub to highlight that entire block of code when the link is opened.
+- **Format as Raw Text:** Toggles the `?plain=1` URL query parameter. When enabled, this bypasses GitHub's rich UI rendering and syntax highlighting, showing the file as plain text while still maintaining the line number highlights. This is incredibly useful for copying large blocks of code without accidentally grabbing UI elements.
+
+## 2. Time Machine Compare
+
+GitHub's comparison view is incredibly powerful, but manually constructing the URLs to compare arbitrary points in time can be tedious. The Time Machine Compare tool allows you to instantly build comparison URLs across branches, tags, commit SHAs, or even relative historical dates.
+
+**Requirements:** `Repo` or `File` context URL.
+
+**Interactive Options:**
+
+- **Base Ref:** Define the foundation branch or commit to compare against. This defaults to `main`, but can be changed to any branch name, tag, or specific commit SHA.
+- **Compare Mode:**
+  - _Branch / Tag / SHA:_ Performs a standard Git comparison between your Base Ref and a specific target branch/commit (e.g., `main...feature-branch`).
+  - _Relative Timeframe:_ Allows you to compare the current state of the repository against how it looked "1 week ago", "1 month ago", or "1 year ago". GitWarp leverages GitHub's advanced `{ref}@{date}` syntax (e.g., `main...main@{1.month.ago}`).
+  - _Custom Date:_ Pick a specific calendar date from a date picker to see exactly what changed since that day.
+- **Filter to Path:** If you originally pasted a `File` URL into GitWarp, this toggle will automatically append the `?path=[filepath]` query parameter to the comparison URL. This restricts the massive repository diff view down to just the history of that single specific file.
+
+## 3. Commit Feed
+
+Finding a specific commit in a massive repository can feel like finding a needle in a haystack. The Commit Feed interactive tool allows you to aggressively filter a repository's commit history by branch, author, and file path to instantly zero in on the changes you care about.
+
+**Requirements:** `Repo` or `File` context URL.
+
+**Interactive Options:**
+
+- **Branch / Ref:** Specify which branch's history you want to view. Defaults to the repository's default branch.
+- **Author Filter:** Filter the commit history so it strictly shows commits made by a specific GitHub username or email address. GitWarp automatically appends the `?author=[username]` query parameter to the URL.
+- **Path Filter:** Restrict the commit history feed to a specific directory or file. If you pasted a `File` URL into GitWarp, this field is automatically pre-populated with the path to that file, allowing you to instantly view the standalone history of a single module.

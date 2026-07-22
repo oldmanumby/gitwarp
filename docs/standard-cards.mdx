@@ -1,0 +1,46 @@
+---
+title: 'Standard Trick Cards'
+description: 'Documentation for the 23 standard swappable URL tools.'
+---
+
+# Standard Trick Cards
+
+GitWarp dynamically evaluates your pasted GitHub URL to determine its precise context—whether you are looking at a User Profile, a Repository root, a specific File, a Commit, or a Pull Request. Based on this context, GitWarp intelligently activates the appropriate "Trick Cards" below, ensuring you only see the tools that make sense for your current view.
+
+## Development & Execution
+
+- **bolt.new**: Instantly imports the target repository into Bolt.new, providing an AI builder agent standing by to edit, run, and deploy your code. This is perfect for when you want to spin up a quick prototype or test a PR without leaving your browser.
+- **stackblitz.com**: Boots the repository into an interactive browser-based WebContainers development environment. Unlike traditional cloud IDEs, this runs entirely in your browser's memory, giving you near-instant startup times for Node.js projects.
+- **codespaces.new**: Directly launches a dedicated GitHub Codespaces cloud environment for the repository. This is the fastest way to get a full, persistent, Linux-based VS Code environment with all your GitHub credentials pre-configured.
+- **gitpod.io**: Launches an automated cloud development environment on Gitpod. If the repository contains a `.gitpod.yml`, it will automatically install dependencies, compile the project, and spin up any necessary background services while you load in.
+
+## Editing & Navigation
+
+- **github.dev**: Opens the repository or specific file in a full VS Code web editor (by changing `github.com` to `github.dev`). This is incredibly useful for making quick, multi-file commits directly from your browser without needing to clone the repository.
+- **github1s.com**: The classic, lightning-fast VS Code web view. While `github.dev` requires authentication and takes a moment to load its commit tools, `github1s` is strictly for lightning-fast, read-only codebase navigation. It's the best way to browse complex source code on the fly.
+- **vscode.dev**: Opens the repository or file in VS Code for Web. This differs slightly from `github.dev` by offering a more generic VS Code web experience that doesn't rely as heavily on native GitHub extension integrations.
+
+## AI & Analysis
+
+- **deepwiki.com**: Automatically generates a comprehensive, Wikipedia-style wiki from the repository's source code and documentation. It also provides an interactive Q&A assistant trained specifically on that repository's context.
+- **gitdiagram.com**: Scans the entire repository structure and automatically draws an interactive, visual architecture diagram. This is invaluable when trying to understand the module dependencies of an unfamiliar open-source project.
+- **gitingest**: Flattens an entire repository, directory, or specific file into a single, well-formatted text document. It automatically calculates the token count, making it incredibly easy to copy-paste an entire codebase into an LLM like ChatGPT or Claude for analysis.
+- **gitmcp.io**: Converts the target repository into a live Model Context Protocol (MCP) server. This allows your local AI coding assistants (like Cursor, Claude Desktop, or Windsurf) to directly query and interact with the repository's data dynamically.
+- **gitpodcast.com**: Transforms the repository into an audio podcast. It generates an AI-voiced host dialogue that explains the codebase architecture, purpose, and recent changes—perfect for "reading" documentation while on a run or commuting.
+- **github.gg**: A comprehensive repository control panel. It provides a one-click copy function optimized for AI prompts, runs a rapid security vulnerability scan, and assigns an overall codebase quality score based on standard best practices.
+- **star-history.com**: Generates an interactive, visual chart mapping the repository's star growth over time. This is a great metric for evaluating the momentum, health, and adoption rate of an open-source library before deciding to depend on it.
+
+## Native GitHub Tricks
+
+- **.keys**: Appends `.keys` to a User Profile URL to fetch all public SSH keys associated with that GitHub account. This is incredibly useful for granting a teammate server access without asking them to manually send you their public key.
+- **.gpg**: Appends `.gpg` to a User Profile URL to fetch all public GPG signing keys associated with that GitHub account, allowing you to easily verify their signed commits.
+- **.patch**: Appends `.patch` to any Commit or Pull Request URL to generate a raw, formatted Git patch file. You can pipe this directly into your local Git CLI using `curl [url] | git am` to instantly apply remote changes to your local branch.
+- **.diff**: Appends `.diff` to any Commit or Pull Request URL to generate raw, standard unified diff output. This is perfect for programmatic parsing or quick terminal reviews.
+- **releases.atom**: Transforms the repository URL into an Atom RSS feed tracking all published releases and tags. You can subscribe to this in your RSS reader or Slack integration to get pinged the second a library you depend on drops a new version.
+- **commits.atom**: Transforms the repository or specific branch URL into an Atom RSS feed tracking the commit history. This is excellent for keeping a close eye on the active development of a critical dependency or monitoring a team member's progress.
+
+## Raw Data
+
+- **SSH Clone URL**: Instantly formats the repository location into a standard `git@github.com:...` SSH clone URL, ready to be pasted directly into your terminal.
+- **Zip Archive**: Generates a direct download link to a `.zip` archive of the current state of the repository's default branch. Useful for environments where `git` is not installed.
+- **Raw File URL**: Converts a standard GitHub file view URL into its `raw.githubusercontent.com` equivalent, giving you the direct, unstyled text content of the file. Essential for `curl` or `wget` scripting.
