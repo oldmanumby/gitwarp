@@ -1,10 +1,10 @@
-import { describe, it, beforeEach } from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'fs';
 import path from 'path';
 import { pathToFileURL } from 'url';
 
-import { MockElement, MockDocument, matchesSelector } from './helpers.js';
+import { MockDocument } from './helpers.js';
 
 function setMockNavigator(navObj) {
   Object.defineProperty(globalThis, 'navigator', {
