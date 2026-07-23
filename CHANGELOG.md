@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.12](https://github.com/oldmanumby/gitwarp/compare/v1.3.11...v1.3.12) (2026-07-23)
+
+
+### Chores
+
+* fix changelog formatting for v1.3.11 ([dd58cdc](https://github.com/oldmanumby/gitwarp/commit/dd58cdc77220e5126f8ab23ef6609535ac0d1b48))
+* remove old archive scripts ([b620636](https://github.com/oldmanumby/gitwarp/commit/b62063629b70eb3426c4abfaca4687814930fad8))
+* remove unused imports in tests ([d625bd4](https://github.com/oldmanumby/gitwarp/commit/d625bd40aabc31faef2acdcbea3b00ab0ff3f2c9))
+* revert patch headings to standard format (H3) ([48fa586](https://github.com/oldmanumby/gitwarp/commit/48fa58630a4a046d2805d99e0c58e0b708bd3884))
+
+
+### Documentation
+
+* update interactive tools and rename standard cards to standard tools ([e635ee7](https://github.com/oldmanumby/gitwarp/commit/e635ee70f66a603fbd2cfac2ce7ed5375963dc89))
+
 ### [1.3.11](https://github.com/oldmanumby/gitwarp/compare/v1.3.9...v1.3.11) (2026-07-23)
 
 - **UI/Docs Cleanup**: Resolved Flash of Unstyled Content (FOUC) on the main site and navigation issues between the docs and the main app. Configured accurate GitWarp dark-mode theme colors natively.
