@@ -2,45 +2,53 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [1.3.9](https://github.com/oldmanumby/gitwarp/compare/v1.3.7...v1.3.9) (2026-07-23)
+### [1.3.11](https://github.com/oldmanumby/gitwarp/compare/v1.3.9...v1.3.11) (2026-07-23)
+
+- **UI/Docs Cleanup**: Resolved Flash of Unstyled Content (FOUC) on the main site and navigation issues between the docs and the main app. Configured accurate GitWarp dark-mode theme colors natively.
+
+### Bug Fixes
+
+- resolve theme and FOUC issues ([edca401](https://github.com/oldmanumby/gitwarp/commit/edca4019e1fa1897d688595ff69fc20527275470))
+
+### [1.3.9](https://github.com/oldmanumby/gitwarp/compare/v1.3.7...v1.3.9) (2026-07-23)
 
 ### Refactors
 
 - resolve complexity errors across core modules ([c1684f9](https://github.com/oldmanumby/gitwarp/commit/c1684f9458b6114e7430bd6b2f87214cce0a6b50))
 
-## [1.3.7](https://github.com/oldmanumby/gitwarp/compare/v1.3.6...v1.3.7) (2026-07-23)
+### [1.3.7](https://github.com/oldmanumby/gitwarp/compare/v1.3.6...v1.3.7) (2026-07-23)
 
 ### Bug Fixes
 
 - resolve blume docs styling by removing broken theme.css and configuring natively ([a948bff](https://github.com/oldmanumby/gitwarp/commit/a948bff75f5252367f76276c7017f70bc07eb71f))
 - resolve remaining adversarial UI test assertion failures ([2567751](https://github.com/oldmanumby/gitwarp/commit/25677511e1c9ef9ca7e4c17e45921c0b5a8d355d))
 
-## [1.3.6](https://github.com/oldmanumby/gitwarp/compare/v1.3.5...v1.3.6) (2026-07-22)
+### [1.3.6](https://github.com/oldmanumby/gitwarp/compare/v1.3.5...v1.3.6) (2026-07-22)
 
 ### Chores
 
 - format font quotes ([0acace0](https://github.com/oldmanumby/gitwarp/commit/0acace0))
 
-## [1.3.5](https://github.com/oldmanumby/gitwarp/compare/v1.3.3...v1.3.5) (2026-07-22)
+### [1.3.5](https://github.com/oldmanumby/gitwarp/compare/v1.3.3...v1.3.5) (2026-07-22)
 
 ### Bug Fixes
 
 - brute force CSS variables for blume docs theme ([40960a3](https://github.com/oldmanumby/gitwarp/commit/40960a3190731e73c2e4ffaea2a0eda5d5ff2899))
 - resolve docs styling issues by using native theme.css ([0f337bf](https://github.com/oldmanumby/gitwarp/commit/0f337bf91b32bb2f8ce842e422c8bbeff6ec9e8e))
 
-## [1.3.3](https://github.com/oldmanumby/gitwarp/compare/v1.3.2...v1.3.3) (2026-07-22)
+### [1.3.3](https://github.com/oldmanumby/gitwarp/compare/v1.3.2...v1.3.3) (2026-07-22)
 
 ### Bug Fixes
 
 - enforce GitWarp brand colors and lock docs into dark mode ([df947e9](https://github.com/oldmanumby/gitwarp/commit/df947e9ebd7e3707bc4075c801e5bcdb324660d6))
 
-## [1.3.2](https://github.com/oldmanumby/gitwarp/compare/v1.3.1...v1.3.2) (2026-07-22)
+### [1.3.2](https://github.com/oldmanumby/gitwarp/compare/v1.3.1...v1.3.2) (2026-07-22)
 
 ### Bug Fixes
 
 - explicitly provide `{ light, dark }` object syntax for Blume theme colors to prevent compiler from silently dropping strings ([d332eb8](https://github.com/oldmanumby/gitwarp/commit/d332eb8))
 
-## [1.3.1](https://github.com/oldmanumby/gitwarp/compare/v1.3.0...v1.3.1) (2026-07-22)
+### [1.3.1](https://github.com/oldmanumby/gitwarp/compare/v1.3.0...v1.3.1) (2026-07-22)
 
 ### Bug Fixes
 

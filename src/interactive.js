@@ -350,11 +350,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
   );
 
   if (!isContextValid) {
-    containerEl.innerHTML = `
-      <div class="interactive-fallback">
-        <p>Enter a valid GitHub URL to unlock interactive tools.</p>
-      </div>
-    `;
+    containerEl.innerHTML = '';
     return;
   }
 

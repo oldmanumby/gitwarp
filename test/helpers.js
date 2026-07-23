@@ -1,4 +1,4 @@
-export class MockElement {
+class MockElement {
   constructor(tagName = 'div', id = '', className = '') {
     this.tagName = tagName.toUpperCase();
     this.id = id;
@@ -198,7 +198,7 @@ export class MockElement {
 }
 
 // fallow-ignore-next-line complexity
-export function matchesSelector(el, selector) {
+function matchesSelector(el, selector) {
   if (!el || !selector) return false;
   const parts = selector.match(/#[a-zA-Z0-9_-]+|\.[a-zA-Z0-9_-]+|\[[^\]]+\]|[a-zA-Z0-9-]+/g) || [
     selector,

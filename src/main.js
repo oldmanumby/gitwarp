@@ -40,7 +40,6 @@ import {
 import { parseGithubUrl } from './parser.js';
 import { STANDARD_CARDS, isCardCompatible, getCardUrl } from './cards.js';
 import { renderInteractiveCards } from './interactive.js';
-import './style.css';
 
 // Pure HTML escaping helper function
 function escapeHtml(str) {

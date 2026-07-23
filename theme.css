@@ -1,0 +1,15 @@
+/* Blume Theme Overrides */
+
+:root {
+  /* Light mode overrides */
+  --blume-background: oklch(1 0 0);
+  --blume-accent: oklch(0.6 0.14 255);
+  --blume-border: var(--blume-accent);
+}
+
+:root[data-theme='dark'] {
+  /* Dark mode overrides (from DESIGN.md) */
+  --blume-background: oklch(0.17 0.02 255);
+  --blume-accent: oklch(0.6 0.14 255);
+  --blume-border: var(--blume-accent);
+}

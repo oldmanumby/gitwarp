@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { pathToFileURL } from 'url';
 
-import { MockElement, MockDocument, matchesSelector } from './helpers.js';
+import { MockDocument } from './helpers.js';
 
 async function setupEnv() {
   const doc = new MockDocument();
