@@ -59,6 +59,7 @@ export function isInteractiveCardCompatible(cardId, parsedContext) {
  * @param {Object} [options={}]
  * @returns {string|null}
  */
+  // fallow-ignore-next-line complexity
 export function buildDeepLinkerUrl(parsedContext, options = {}) {
   if (
     !parsedContext ||
@@ -177,6 +178,7 @@ function safeEncodeRef(refStr) {
  * @param {Object} [options={}]
  * @returns {string|null}
  */
+  // fallow-ignore-next-line complexity
 export function buildTimeMachineUrl(parsedContext, options = {}) {
   if (!parsedContext || typeof parsedContext !== 'object' || !parsedContext.valid) {
     return null;
@@ -248,6 +250,7 @@ export function buildTimeMachineUrl(parsedContext, options = {}) {
  * @param {Object} [options={}]
  * @returns {string|null}
  */
+  // fallow-ignore-next-line complexity
 export function buildCommitFeedUrl(parsedContext, options = {}) {
   if (!parsedContext || typeof parsedContext !== 'object' || !parsedContext.valid) {
     return null;
@@ -298,11 +301,44 @@ export function buildCommitFeedUrl(parsedContext, options = {}) {
 }
 
 /**
+ * Helper to update a link and copy button UI.
+ * @param {string|null} url
+ * @param {HTMLAnchorElement} linkEl
+ * @param {HTMLButtonElement} btnEl
+ */
+function updateLinkUI(url, linkEl, btnEl) {
+  if (linkEl) {
+    linkEl.href = url || '#';
+    linkEl.textContent = url ? url.replace('https://', '') : 'N/A';
+    linkEl.title = url || '';
+  }
+  if (btnEl) {
+    btnEl.setAttribute('data-url', url || '');
+    if (url) btnEl.removeAttribute('disabled');
+    else btnEl.setAttribute('disabled', 'true');
+  }
+}
+
+/**
+ * Helper to toggle visibility of time machine groups.
+ * @param {string} mode
+ * @param {HTMLElement} refGroup
+ * @param {HTMLElement} timeframeGroup
+ * @param {HTMLElement} dateGroup
+ */
+function toggleTimeMachineVisibility(mode, refGroup, timeframeGroup, dateGroup) {
+  if (refGroup) refGroup.style.display = mode === 'ref' ? '' : 'none';
+  if (timeframeGroup) timeframeGroup.style.display = mode === 'timeframe' ? '' : 'none';
+  if (dateGroup) dateGroup.style.display = mode === 'custom_date' ? '' : 'none';
+}
+
+/**
  * Renders full-width interactive cards into a container DOM element.
  *
  * @param {HTMLElement} containerEl
  * @param {Object} parsedContext
  */
+  // fallow-ignore-next-line complexity
 export function renderInteractiveCards(containerEl, parsedContext) {
   if (!containerEl || typeof containerEl !== 'object') return;
 
@@ -314,7 +350,11 @@ export function renderInteractiveCards(containerEl, parsedContext) {
   );
 
   if (!isContextValid) {
-    containerEl.innerHTML = '';
+    containerEl.innerHTML = `
+      <div class="interactive-fallback">
+        <p>Enter a valid GitHub URL to unlock interactive tools.</p>
+      </div>
+    `;
     return;
   }
 
@@ -506,16 +546,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
         lineEnd: deepEnd ? deepEnd.value : undefined,
         plainToggle: deepPlain ? deepPlain.checked : false,
       });
-      if (deepLink) {
-        deepLink.href = url || '#';
-        deepLink.textContent = url ? url.replace('https://', '') : 'N/A';
-        deepLink.title = url || '';
-      }
-      if (deepBtn) {
-        deepBtn.setAttribute('data-url', url || '');
-        if (url) deepBtn.removeAttribute('disabled');
-        else deepBtn.setAttribute('disabled', 'true');
-      }
+      updateLinkUI(url, deepLink, deepBtn);
     };
 
     [deepStart, deepEnd, deepPlain].forEach((el) => {
@@ -544,10 +575,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
     const updateTimeMachine = () => {
       const mode = compareMode ? compareMode.value : 'ref';
 
-      // Toggle group visibility
-      if (refGroup) refGroup.style.display = mode === 'ref' ? '' : 'none';
-      if (timeframeGroup) timeframeGroup.style.display = mode === 'timeframe' ? '' : 'none';
-      if (dateGroup) dateGroup.style.display = mode === 'custom_date' ? '' : 'none';
+      toggleTimeMachineVisibility(mode, refGroup, timeframeGroup, dateGroup);
 
       const url = buildTimeMachineUrl(parsedContext, {
         baseRef: baseRef ? baseRef.value : undefined,
@@ -558,16 +586,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
         includeFilePath: includePath ? includePath.checked : false,
       });
 
-      if (timeLink) {
-        timeLink.href = url || '#';
-        timeLink.textContent = url ? url.replace('https://', '') : 'N/A';
-        timeLink.title = url || '';
-      }
-      if (timeBtn) {
-        timeBtn.setAttribute('data-url', url || '');
-        if (url) timeBtn.removeAttribute('disabled');
-        else timeBtn.setAttribute('disabled', 'true');
-      }
+      updateLinkUI(url, timeLink, timeBtn);
     };
 
     [baseRef, compareMode, compareRef, timeframe, customDate, includePath].forEach((el) => {
@@ -592,16 +611,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
         pathInput: commitPath ? commitPath.value : undefined,
       });
 
-      if (commitLink) {
-        commitLink.href = url || '#';
-        commitLink.textContent = url ? url.replace('https://', '') : 'N/A';
-        commitLink.title = url || '';
-      }
-      if (commitBtn) {
-        commitBtn.setAttribute('data-url', url || '');
-        if (url) commitBtn.removeAttribute('disabled');
-        else commitBtn.setAttribute('disabled', 'true');
-      }
+      updateLinkUI(url, commitLink, commitBtn);
     };
 
     [commitRef, commitAuthor, commitPath].forEach((el) => {

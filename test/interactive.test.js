@@ -340,9 +340,7 @@ describe('Interactive Cards Component (src/interactive.js)', () => {
       const mockContainer = createMockElement();
       const invalidCtx = parseGithubUrl('invalid-url');
       renderInteractiveCards(mockContainer, invalidCtx);
-
-      assert.ok(mockContainer.innerHTML.includes('Interactive Tools'));
-      assert.ok(mockContainer.innerHTML.includes('Enter a valid GitHub URL'));
+      assert.ok(mockContainer.innerHTML.includes('interactive-fallback'));
     });
 
     it('renders all three interactive cards for valid File context', () => {

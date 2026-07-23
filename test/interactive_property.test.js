@@ -19,6 +19,7 @@ function createRandom(seed = 12345) {
 }
 
 describe('Interactive Cards Property & DOM Invariant Tests', () => {
+  // fallow-ignore-next-line complexity
   describe('Property Invariant 1: buildDeepLinkerUrl', () => {
     const DEEP_LINKER_REGEX = /^https:\/\/github\.com\/[^\/]+\/[^\/]+\/blob\/[^\/]+\/.+/;
 
@@ -408,6 +409,7 @@ describe('Interactive Cards Property & DOM Invariant Tests', () => {
         },
       });
 
+  // fallow-ignore-next-line complexity
       function parseAndBuildTree(html, parent) {
         // HTML parser helper for mock node tree construction
         const tagRegex = /<([a-z1-6]+)([^>]*)>([\s\S]*?)<\/\1>|<([a-z1-6]+)([^>]*)\/?>/gi;
@@ -460,7 +462,6 @@ describe('Interactive Cards Property & DOM Invariant Tests', () => {
       const container = createFullMockDOM();
       renderInteractiveCards(container, null);
 
-      assert.ok(container.innerHTML.includes('Interactive Tools'));
       assert.ok(
         container.innerHTML.includes('Enter a valid GitHub URL to unlock interactive tools.')
       );

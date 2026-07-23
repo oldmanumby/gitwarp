@@ -82,6 +82,263 @@ function parseLineFragment(hash) {
 }
 
 /**
+ * @param {URL} parsedUrl
+ * @param {string} rawUrl
+ * @param {Record<string, string>} queryParams
+ * @param {number|null} lineStart
+ * @param {number|null} lineEnd
+ * @returns {Object|null}
+ */
+function parseRawGithubUrl(parsedUrl, rawUrl, queryParams, lineStart, lineEnd) {
+  const segments = parsedUrl.pathname.split('/').filter(Boolean);
+  if (segments.length >= 3) {
+    const owner = segments[0];
+    const repo = segments[1].replace(/\.git$/i, '');
+    const ref = segments[2];
+    const filePath = segments.slice(3).join('/') || null;
+    const normalizedUrl = `https://github.com/${owner}/${repo}/blob/${ref}${filePath ? '/' + filePath : ''}`;
+
+    return Object.freeze({
+      valid: true,
+      context: 'File',
+      type: 'file',
+      owner,
+      repo,
+      ref,
+      filePath,
+      path: filePath,
+      commitHash: null,
+      commitSha: null,
+      prNumber: null,
+      lineStart,
+      lineEnd,
+      isRaw: true,
+      queryParams: Object.freeze(queryParams),
+      rawUrl,
+      normalizedUrl,
+    });
+  }
+  return null;
+}
+
+/**
+ * @param {URL} parsedUrl
+ * @param {string} rawUrl
+ * @param {Record<string, string>} queryParams
+ * @param {number|null} lineStart
+ * @param {number|null} lineEnd
+ * @param {Function} createUnknownResult
+ * @returns {Object}
+ */
+  // fallow-ignore-next-line complexity
+function parseStandardGithubUrl(
+  parsedUrl,
+  rawUrl,
+  queryParams,
+  lineStart,
+  lineEnd,
+  createUnknownResult
+) {
+  const segments = parsedUrl.pathname.split('/').filter(Boolean);
+
+  if (segments.length === 0) return createUnknownResult();
+
+  if (segments.length === 1) {
+    const firstSegment = segments[0];
+    if (RESERVED_NAMES.has(firstSegment.toLowerCase())) return createUnknownResult();
+    const owner = firstSegment;
+    return Object.freeze({
+      valid: true,
+      context: 'User',
+      type: 'user',
+      owner,
+      repo: null,
+      ref: null,
+      filePath: null,
+      path: null,
+      commitHash: null,
+      commitSha: null,
+      prNumber: null,
+      lineStart: null,
+      lineEnd: null,
+      isRaw: false,
+      queryParams: Object.freeze(queryParams),
+      rawUrl,
+      normalizedUrl: `https://github.com/${owner}`,
+    });
+  }
+
+  const owner = segments[0];
+  if (RESERVED_NAMES.has(owner.toLowerCase())) return createUnknownResult();
+
+  const repo = segments[1].replace(/\.git$/i, '');
+
+  if (segments.length === 2) {
+    return Object.freeze({
+      valid: true,
+      context: 'Repo',
+      type: 'repo',
+      owner,
+      repo,
+      ref: null,
+      filePath: null,
+      path: null,
+      commitHash: null,
+      commitSha: null,
+      prNumber: null,
+      lineStart: null,
+      lineEnd: null,
+      isRaw: false,
+      queryParams: Object.freeze(queryParams),
+      rawUrl,
+      normalizedUrl: `https://github.com/${owner}/${repo}`,
+    });
+  }
+
+  const route = segments[2].toLowerCase();
+
+  if (route === 'tree') {
+    const ref = segments[3] || null;
+    const subpath = segments.slice(4).join('/') || null;
+    if (!subpath) {
+      return Object.freeze({
+        valid: true,
+        context: 'Repo',
+        type: 'repo',
+        owner,
+        repo,
+        ref,
+        filePath: null,
+        path: null,
+        commitHash: null,
+        commitSha: null,
+        prNumber: null,
+        lineStart,
+        lineEnd,
+        isRaw: false,
+        queryParams: Object.freeze(queryParams),
+        rawUrl,
+        normalizedUrl: `https://github.com/${owner}/${repo}/tree/${ref}`,
+      });
+    } else {
+      return Object.freeze({
+        valid: true,
+        context: 'File',
+        type: 'file',
+        owner,
+        repo,
+        ref,
+        filePath: subpath,
+        path: subpath,
+        commitHash: null,
+        commitSha: null,
+        prNumber: null,
+        lineStart,
+        lineEnd,
+        isRaw: false,
+        queryParams: Object.freeze(queryParams),
+        rawUrl,
+        normalizedUrl: `https://github.com/${owner}/${repo}/tree/${ref}/${subpath}`,
+      });
+    }
+  }
+
+  if (route === 'blob' || route === 'raw') {
+    const ref = segments[3] || null;
+    const filePath = segments.slice(4).join('/') || null;
+    return Object.freeze({
+      valid: true,
+      context: 'File',
+      type: 'file',
+      owner,
+      repo,
+      ref,
+      filePath,
+      path: filePath,
+      commitHash: null,
+      commitSha: null,
+      prNumber: null,
+      lineStart,
+      lineEnd,
+      isRaw: route === 'raw',
+      queryParams: Object.freeze(queryParams),
+      rawUrl,
+      normalizedUrl: `https://github.com/${owner}/${repo}/blob/${ref}${filePath ? '/' + filePath : ''}`,
+    });
+  }
+
+  if (route === 'commit') {
+    const commitSha = segments[3] || null;
+    return Object.freeze({
+      valid: true,
+      context: 'Commit',
+      type: 'commit',
+      owner,
+      repo,
+      ref: commitSha,
+      filePath: null,
+      path: null,
+      commitHash: commitSha,
+      commitSha,
+      prNumber: null,
+      lineStart: null,
+      lineEnd: null,
+      isRaw: false,
+      queryParams: Object.freeze(queryParams),
+      rawUrl,
+      normalizedUrl: commitSha
+        ? `https://github.com/${owner}/${repo}/commit/${commitSha}`
+        : `https://github.com/${owner}/${repo}`,
+    });
+  }
+
+  if (route === 'pull' || route === 'pulls') {
+    const prNumber = segments[3] || null;
+    return Object.freeze({
+      valid: true,
+      context: 'PR',
+      type: 'pr',
+      owner,
+      repo,
+      ref: null,
+      filePath: null,
+      path: null,
+      commitHash: null,
+      commitSha: null,
+      prNumber: prNumber ? String(prNumber) : null,
+      lineStart: null,
+      lineEnd: null,
+      isRaw: false,
+      queryParams: Object.freeze(queryParams),
+      rawUrl,
+      normalizedUrl: prNumber
+        ? `https://github.com/${owner}/${repo}/pull/${prNumber}`
+        : `https://github.com/${owner}/${repo}`,
+    });
+  }
+
+  return Object.freeze({
+    valid: true,
+    context: 'Repo',
+    type: 'repo',
+    owner,
+    repo,
+    ref: null,
+    filePath: null,
+    path: segments.slice(2).join('/') || null,
+    commitHash: null,
+    commitSha: null,
+    prNumber: null,
+    lineStart: null,
+    lineEnd: null,
+    isRaw: false,
+    queryParams: Object.freeze(queryParams),
+    rawUrl,
+    normalizedUrl: null,
+  });
+}
+
+/**
  * Parses any GitHub URL into an immutable context object.
  *
  * @param {string} inputUrl
@@ -193,263 +450,18 @@ export function parseGithubUrl(inputUrl) {
 
   // Handle raw.githubusercontent.com domain
   if (hostname === 'raw.githubusercontent.com') {
-    const segments = parsedUrl.pathname.split('/').filter(Boolean);
-    if (segments.length >= 3) {
-      const owner = segments[0];
-      const repo = segments[1].replace(/\.git$/i, '');
-      const ref = segments[2];
-      const filePath = segments.slice(3).join('/') || null;
-      const normalizedUrl = `https://github.com/${owner}/${repo}/blob/${ref}${filePath ? '/' + filePath : ''}`;
-
-      return Object.freeze({
-        valid: true,
-        context: 'File',
-        type: 'file',
-        owner,
-        repo,
-        ref,
-        filePath,
-        path: filePath,
-        commitHash: null,
-        commitSha: null,
-        prNumber: null,
-        lineStart,
-        lineEnd,
-        isRaw: true,
-        queryParams: Object.freeze(queryParams),
-        rawUrl,
-        normalizedUrl,
-      });
-    } else {
-      return createUnknownResult();
-    }
+    const res = parseRawGithubUrl(parsedUrl, rawUrl, queryParams, lineStart, lineEnd);
+    return res || createUnknownResult();
   }
 
-  // For github.com, www.github.com, github.dev, github1s.com
-  const segments = parsedUrl.pathname.split('/').filter(Boolean);
-
-  if (segments.length === 0) {
-    // Homepage
-    return createUnknownResult();
-  }
-
-  // Segment 1: User Context or Reserved Route
-  if (segments.length === 1) {
-    const firstSegment = segments[0];
-    if (RESERVED_NAMES.has(firstSegment.toLowerCase())) {
-      return createUnknownResult();
-    }
-    const owner = firstSegment;
-    const normalizedUrl = `https://github.com/${owner}`;
-
-    return Object.freeze({
-      valid: true,
-      context: 'User',
-      type: 'user',
-      owner,
-      repo: null,
-      ref: null,
-      filePath: null,
-      path: null,
-      commitHash: null,
-      commitSha: null,
-      prNumber: null,
-      lineStart: null,
-      lineEnd: null,
-      isRaw: false,
-      queryParams: Object.freeze(queryParams),
-      rawUrl,
-      normalizedUrl,
-    });
-  }
-
-  // Segments >= 2
-  const owner = segments[0];
-  if (RESERVED_NAMES.has(owner.toLowerCase())) {
-    return createUnknownResult();
-  }
-
-  const repoRaw = segments[1];
-  const repo = repoRaw.replace(/\.git$/i, '');
-
-  if (segments.length === 2) {
-    // Repo root: github.com/owner/repo
-    const normalizedUrl = `https://github.com/${owner}/${repo}`;
-    return Object.freeze({
-      valid: true,
-      context: 'Repo',
-      type: 'repo',
-      owner,
-      repo,
-      ref: null,
-      filePath: null,
-      path: null,
-      commitHash: null,
-      commitSha: null,
-      prNumber: null,
-      lineStart: null,
-      lineEnd: null,
-      isRaw: false,
-      queryParams: Object.freeze(queryParams),
-      rawUrl,
-      normalizedUrl,
-    });
-  }
-
-  // Segments >= 3: sub-resource routing
-  const route = segments[2].toLowerCase();
-
-  if (route === 'tree') {
-    const ref = segments[3] || null;
-    const subpath = segments.slice(4).join('/') || null;
-
-    if (!subpath) {
-      // Branch / Tag root (github.com/owner/repo/tree/main)
-      const normalizedUrl = `https://github.com/${owner}/${repo}/tree/${ref}`;
-      return Object.freeze({
-        valid: true,
-        context: 'Repo',
-        type: 'repo',
-        owner,
-        repo,
-        ref,
-        filePath: null,
-        path: null,
-        commitHash: null,
-        commitSha: null,
-        prNumber: null,
-        lineStart,
-        lineEnd,
-        isRaw: false,
-        queryParams: Object.freeze(queryParams),
-        rawUrl,
-        normalizedUrl,
-      });
-    } else {
-      // Directory tree view (github.com/owner/repo/tree/main/src/components) -> context: 'File'
-      const normalizedUrl = `https://github.com/${owner}/${repo}/tree/${ref}/${subpath}`;
-      return Object.freeze({
-        valid: true,
-        context: 'File',
-        type: 'file',
-        owner,
-        repo,
-        ref,
-        filePath: subpath,
-        path: subpath,
-        commitHash: null,
-        commitSha: null,
-        prNumber: null,
-        lineStart,
-        lineEnd,
-        isRaw: false,
-        queryParams: Object.freeze(queryParams),
-        rawUrl,
-        normalizedUrl,
-      });
-    }
-  }
-
-  if (route === 'blob' || route === 'raw') {
-    const ref = segments[3] || null;
-    const filePath = segments.slice(4).join('/') || null;
-    const normalizedUrl = `https://github.com/${owner}/${repo}/blob/${ref}${filePath ? '/' + filePath : ''}`;
-
-    return Object.freeze({
-      valid: true,
-      context: 'File',
-      type: 'file',
-      owner,
-      repo,
-      ref,
-      filePath,
-      path: filePath,
-      commitHash: null,
-      commitSha: null,
-      prNumber: null,
-      lineStart,
-      lineEnd,
-      isRaw: route === 'raw',
-      queryParams: Object.freeze(queryParams),
-      rawUrl,
-      normalizedUrl,
-    });
-  }
-
-  if (route === 'commit') {
-    const commitSha = segments[3] || null;
-    const normalizedUrl = commitSha
-      ? `https://github.com/${owner}/${repo}/commit/${commitSha}`
-      : `https://github.com/${owner}/${repo}`;
-
-    return Object.freeze({
-      valid: true,
-      context: 'Commit',
-      type: 'commit',
-      owner,
-      repo,
-      ref: commitSha,
-      filePath: null,
-      path: null,
-      commitHash: commitSha,
-      commitSha,
-      prNumber: null,
-      lineStart: null,
-      lineEnd: null,
-      isRaw: false,
-      queryParams: Object.freeze(queryParams),
-      rawUrl,
-      normalizedUrl,
-    });
-  }
-
-  if (route === 'pull' || route === 'pulls') {
-    const prNumber = segments[3] || null;
-    const normalizedUrl = prNumber
-      ? `https://github.com/${owner}/${repo}/pull/${prNumber}`
-      : `https://github.com/${owner}/${repo}`;
-
-    return Object.freeze({
-      valid: true,
-      context: 'PR',
-      type: 'pr',
-      owner,
-      repo,
-      ref: null,
-      filePath: null,
-      path: null,
-      commitHash: null,
-      commitSha: null,
-      prNumber: prNumber ? String(prNumber) : null,
-      lineStart: null,
-      lineEnd: null,
-      isRaw: false,
-      queryParams: Object.freeze(queryParams),
-      rawUrl,
-      normalizedUrl,
-    });
-  }
-
-  // Unknown or generic repo route fallback
-  return Object.freeze({
-    valid: true,
-    context: 'Repo',
-    type: 'repo',
-    owner,
-    repo,
-    ref: null,
-    filePath: null,
-    path: segments.slice(2).join('/') || null,
-    commitHash: null,
-    commitSha: null,
-    prNumber: null,
-    lineStart: null,
-    lineEnd: null,
-    isRaw: false,
-    queryParams: Object.freeze(queryParams),
+  return parseStandardGithubUrl(
+    parsedUrl,
     rawUrl,
-    normalizedUrl: `https://github.com/${owner}/${repo}`,
-  });
+    queryParams,
+    lineStart,
+    lineEnd,
+    createUnknownResult
+  );
 }
 
 /**

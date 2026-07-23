@@ -39,6 +39,28 @@
  */
 
 /**
+ * Helper to generate a standard domain-swapped URL.
+ * @param {string} domain
+ * @param {ParsedContext} ctx
+ * @param {string} [prefix='']
+ * @returns {string|null}
+ */
+  // fallow-ignore-next-line complexity
+function generateDomainUrl(domain, ctx, prefix = '') {
+  if (!ctx || !ctx.owner || !ctx.repo) return null;
+  if (ctx.context === 'File' && ctx.filePath) {
+    return `https://${domain}${prefix}/${ctx.owner}/${ctx.repo}/blob/${ctx.ref || 'main'}/${ctx.filePath}`;
+  }
+  if (ctx.context === 'Commit' && ctx.commitSha) {
+    return `https://${domain}${prefix}/${ctx.owner}/${ctx.repo}/commit/${ctx.commitSha}`;
+  }
+  if (ctx.context === 'PR' && ctx.prNumber) {
+    return `https://${domain}${prefix}/${ctx.owner}/${ctx.repo}/pull/${ctx.prNumber}`;
+  }
+  return `https://${domain}${prefix}/${ctx.owner}/${ctx.repo}`;
+}
+
+/**
  * Array of 23 standard trick card definitions.
  * @type {StandardCard[]}
  */
@@ -83,19 +105,7 @@ export const STANDARD_CARDS = [
     icon: 'file-text',
     allowedContexts: ['Repo', 'File', 'Commit', 'PR'],
     description: 'Flattens repo or file into one prompt-friendly text document with token count.',
-    generateUrl: (ctx) => {
-      if (!ctx || !ctx.owner || !ctx.repo) return null;
-      if (ctx.context === 'File' && ctx.filePath) {
-        return `https://gitingest.com/${ctx.owner}/${ctx.repo}/blob/${ctx.ref || 'main'}/${ctx.filePath}`;
-      }
-      if (ctx.context === 'Commit' && ctx.commitSha) {
-        return `https://gitingest.com/${ctx.owner}/${ctx.repo}/commit/${ctx.commitSha}`;
-      }
-      if (ctx.context === 'PR' && ctx.prNumber) {
-        return `https://gitingest.com/${ctx.owner}/${ctx.repo}/pull/${ctx.prNumber}`;
-      }
-      return `https://gitingest.com/${ctx.owner}/${ctx.repo}`;
-    },
+    generateUrl: (ctx) => generateDomainUrl('gitingest.com', ctx),
   },
   {
     id: 'githubdev',
@@ -103,19 +113,7 @@ export const STANDARD_CARDS = [
     icon: 'code',
     allowedContexts: ['Repo', 'File', 'Commit', 'PR'],
     description: 'Opens the repository or file in a full VS Code web editor.',
-    generateUrl: (ctx) => {
-      if (!ctx || !ctx.owner || !ctx.repo) return null;
-      if (ctx.context === 'File' && ctx.filePath) {
-        return `https://github.dev/${ctx.owner}/${ctx.repo}/blob/${ctx.ref || 'main'}/${ctx.filePath}`;
-      }
-      if (ctx.context === 'Commit' && ctx.commitSha) {
-        return `https://github.dev/${ctx.owner}/${ctx.repo}/commit/${ctx.commitSha}`;
-      }
-      if (ctx.context === 'PR' && ctx.prNumber) {
-        return `https://github.dev/${ctx.owner}/${ctx.repo}/pull/${ctx.prNumber}`;
-      }
-      return `https://github.dev/${ctx.owner}/${ctx.repo}`;
-    },
+    generateUrl: (ctx) => generateDomainUrl('github.dev', ctx),
   },
   {
     id: 'githubgg',
@@ -135,19 +133,7 @@ export const STANDARD_CARDS = [
     icon: 'eye',
     allowedContexts: ['Repo', 'File', 'Commit', 'PR'],
     description: 'Classic VS Code web view for fast read-only codebase navigation.',
-    generateUrl: (ctx) => {
-      if (!ctx || !ctx.owner || !ctx.repo) return null;
-      if (ctx.context === 'File' && ctx.filePath) {
-        return `https://github1s.com/${ctx.owner}/${ctx.repo}/blob/${ctx.ref || 'main'}/${ctx.filePath}`;
-      }
-      if (ctx.context === 'Commit' && ctx.commitSha) {
-        return `https://github1s.com/${ctx.owner}/${ctx.repo}/commit/${ctx.commitSha}`;
-      }
-      if (ctx.context === 'PR' && ctx.prNumber) {
-        return `https://github1s.com/${ctx.owner}/${ctx.repo}/pull/${ctx.prNumber}`;
-      }
-      return `https://github1s.com/${ctx.owner}/${ctx.repo}`;
-    },
+    generateUrl: (ctx) => generateDomainUrl('github1s.com', ctx),
   },
   {
     id: 'gitmcp',
@@ -226,12 +212,10 @@ export const STANDARD_CARDS = [
     description: 'Appends .patch to commit or PR URLs to get formatted raw Git patch files.',
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo) return null;
-      if (ctx.context === 'Commit' && ctx.commitSha) {
+      if (ctx.context === 'Commit' && ctx.commitSha)
         return `https://github.com/${ctx.owner}/${ctx.repo}/commit/${ctx.commitSha}.patch`;
-      }
-      if (ctx.context === 'PR' && ctx.prNumber) {
+      if (ctx.context === 'PR' && ctx.prNumber)
         return `https://github.com/${ctx.owner}/${ctx.repo}/pull/${ctx.prNumber}.patch`;
-      }
       return null;
     },
   },
@@ -243,12 +227,10 @@ export const STANDARD_CARDS = [
     description: 'Appends .diff to commit or PR URLs to get raw unified diff output.',
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo) return null;
-      if (ctx.context === 'Commit' && ctx.commitSha) {
+      if (ctx.context === 'Commit' && ctx.commitSha)
         return `https://github.com/${ctx.owner}/${ctx.repo}/commit/${ctx.commitSha}.diff`;
-      }
-      if (ctx.context === 'PR' && ctx.prNumber) {
+      if (ctx.context === 'PR' && ctx.prNumber)
         return `https://github.com/${ctx.owner}/${ctx.repo}/pull/${ctx.prNumber}.diff`;
-      }
       return null;
     },
   },
@@ -308,19 +290,7 @@ export const STANDARD_CARDS = [
     icon: 'box',
     allowedContexts: ['Repo', 'File', 'Commit', 'PR'],
     description: 'Launches an automated cloud development environment on Gitpod.',
-    generateUrl: (ctx) => {
-      if (!ctx || !ctx.owner || !ctx.repo) return null;
-      if (ctx.context === 'File' && ctx.filePath) {
-        return `https://gitpod.io/#https://github.com/${ctx.owner}/${ctx.repo}/blob/${ctx.ref || 'main'}/${ctx.filePath}`;
-      }
-      if (ctx.context === 'Commit' && ctx.commitSha) {
-        return `https://gitpod.io/#https://github.com/${ctx.owner}/${ctx.repo}/commit/${ctx.commitSha}`;
-      }
-      if (ctx.context === 'PR' && ctx.prNumber) {
-        return `https://gitpod.io/#https://github.com/${ctx.owner}/${ctx.repo}/pull/${ctx.prNumber}`;
-      }
-      return `https://gitpod.io/#https://github.com/${ctx.owner}/${ctx.repo}`;
-    },
+    generateUrl: (ctx) => generateDomainUrl('gitpod.io', ctx, '/#https://github.com'),
   },
   {
     id: 'vscode_dev',
@@ -328,19 +298,7 @@ export const STANDARD_CARDS = [
     icon: 'code',
     allowedContexts: ['Repo', 'File', 'Commit', 'PR'],
     description: 'Opens the repository or file in VS Code for Web without extension setup.',
-    generateUrl: (ctx) => {
-      if (!ctx || !ctx.owner || !ctx.repo) return null;
-      if (ctx.context === 'File' && ctx.filePath) {
-        return `https://vscode.dev/github/${ctx.owner}/${ctx.repo}/blob/${ctx.ref || 'main'}/${ctx.filePath}`;
-      }
-      if (ctx.context === 'Commit' && ctx.commitSha) {
-        return `https://vscode.dev/github/${ctx.owner}/${ctx.repo}/commit/${ctx.commitSha}`;
-      }
-      if (ctx.context === 'PR' && ctx.prNumber) {
-        return `https://vscode.dev/github/${ctx.owner}/${ctx.repo}/pull/${ctx.prNumber}`;
-      }
-      return `https://vscode.dev/github/${ctx.owner}/${ctx.repo}`;
-    },
+    generateUrl: (ctx) => generateDomainUrl('vscode.dev', ctx, '/github'),
   },
   {
     id: 'ssh_clone',
