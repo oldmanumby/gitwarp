@@ -22,11 +22,18 @@ await Bun.build({
 
 console.log('Copying static assets...');
 
-// Copy index.html and update script source
+// Copy index.html and update script/css sources
 let indexHtml = fs.readFileSync(path.join(BASE_DIR, 'index.html'), 'utf-8');
 indexHtml = indexHtml.replace('src="/src/main.js"', 'src="/assets/main.js"');
-indexHtml = indexHtml.replace("src='./src/main.js'", "src='/assets/main.js'"); // Handle single quotes just in case
+indexHtml = indexHtml.replace("src='./src/main.js'", "src='/assets/main.js'"); 
+indexHtml = indexHtml.replace('href="/src/style.css"', 'href="/assets/style.css"');
+indexHtml = indexHtml.replace("href='./src/style.css'", "href='/assets/style.css'");
 fs.writeFileSync(path.join(DIST_DIR, 'index.html'), indexHtml);
+
+// Copy style.css to assets
+if (fs.existsSync(path.join(BASE_DIR, 'src', 'style.css'))) {
+  fs.copyFileSync(path.join(BASE_DIR, 'src', 'style.css'), path.join(ASSETS_DIR, 'style.css'));
+}
 
 // Copy theme.css
 if (fs.existsSync(path.join(BASE_DIR, 'theme.css'))) {
