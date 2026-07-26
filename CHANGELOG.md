@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.14](https://github.com/oldmanumby/gitwarp/compare/v1.3.13...v1.3.14) (2026-07-26)
+
+
+### Bug Fixes
+
+* correctly bundle css styles in custom build script ([3bea16e](https://github.com/oldmanumby/gitwarp/commit/3bea16e735535f8a36af919d6604e1fe26291760))
+
 ### [1.3.13](https://github.com/oldmanumby/gitwarp/compare/v1.3.12...v1.3.13) (2026-07-23)
 
 
