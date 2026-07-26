@@ -1,4 +1,4 @@
-import { describe, it } from 'node:test';
+import { describe, it } from 'bun:test';
 import assert from 'node:assert/strict';
 import { STANDARD_CARDS, isCardCompatible, getCardUrl, getCompatibleCards } from '../src/cards.js';
 import { parseGithubUrl } from '../src/parser.js';
@@ -39,6 +39,7 @@ describe('Standard Trick Cards & Compatibility System', () => {
       assert.deepEqual(actualIds.sort(), expectedIds.sort());
     });
 
+    // fallow-ignore-next-line complexity
     it('every card has valid metadata and generateUrl function', () => {
       for (const card of STANDARD_CARDS) {
         assert.ok(typeof card.id === 'string' && card.id.length > 0, `Card missing id: ${card.id}`);

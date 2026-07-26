@@ -32,6 +32,7 @@ export function escapeHtml(str) {
  * @param {Object} parsedContext
  * @returns {boolean}
  */
+// fallow-ignore-next-line complexity
 export function isInteractiveCardCompatible(cardId, parsedContext) {
   if (!parsedContext || typeof parsedContext !== 'object' || !parsedContext.valid) {
     return false;
@@ -306,6 +307,7 @@ export function buildCommitFeedUrl(parsedContext, options = {}) {
  * @param {HTMLAnchorElement} linkEl
  * @param {HTMLButtonElement} btnEl
  */
+// fallow-ignore-next-line complexity
 function updateLinkUI(url, linkEl, btnEl) {
   if (linkEl) {
     linkEl.href = url || '#';
@@ -326,6 +328,7 @@ function updateLinkUI(url, linkEl, btnEl) {
  * @param {HTMLElement} timeframeGroup
  * @param {HTMLElement} dateGroup
  */
+// fallow-ignore-next-line complexity
 function toggleTimeMachineVisibility(mode, refGroup, timeframeGroup, dateGroup) {
   if (refGroup) refGroup.style.display = mode === 'ref' ? '' : 'none';
   if (timeframeGroup) timeframeGroup.style.display = mode === 'timeframe' ? '' : 'none';
@@ -350,7 +353,11 @@ export function renderInteractiveCards(containerEl, parsedContext) {
   );
 
   if (!isContextValid) {
-    containerEl.innerHTML = '';
+    containerEl.innerHTML = `
+      <div class="interactive-fallback">
+        <p>Enter a valid GitHub URL to unlock interactive tools.</p>
+      </div>
+    `;
     return;
   }
 
@@ -568,6 +575,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
     const timeLink = containerEl.querySelector('#time-machine-url');
     const timeBtn = timeLink?.parentElement?.querySelector('.copy-btn');
 
+    // fallow-ignore-next-line complexity
     const updateTimeMachine = () => {
       const mode = compareMode ? compareMode.value : 'ref';
 

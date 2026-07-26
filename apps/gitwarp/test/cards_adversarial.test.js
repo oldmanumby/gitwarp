@@ -1,4 +1,4 @@
-import { describe, it } from 'node:test';
+import { describe, it } from 'bun:test';
 import assert from 'node:assert/strict';
 import { STANDARD_CARDS, isCardCompatible, getCardUrl, getCompatibleCards } from '../src/cards.js';
 
@@ -74,6 +74,7 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
       }
     });
 
+    // fallow-ignore-next-line complexity
     it('handles context missing required identifiers (null owner/repo/filePath)', () => {
       const missingOwner = { valid: true, context: 'Repo', owner: null, repo: 'react' };
       const missingRepo = { valid: true, context: 'Repo', owner: 'facebook', repo: null };

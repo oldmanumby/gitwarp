@@ -81,6 +81,7 @@ class MockElement {
     }
   }
 
+  // fallow-ignore-next-line complexity
   parseAttributes(attrStr, child) {
     const attrRegex = /([a-zA-Z0-9-.]+)(?:=(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
     let attrMatch;
@@ -149,6 +150,7 @@ class MockElement {
     const arr = this.listeners.get(event).filter((f) => f !== fn);
     this.listeners.set(event, arr);
   }
+  // fallow-ignore-next-line complexity
   dispatchEvent(eventOrString) {
     const type = typeof eventOrString === 'string' ? eventOrString : eventOrString.type;
     const target =

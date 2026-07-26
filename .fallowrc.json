@@ -1,0 +1,61 @@
+{
+  // This file is JSONC: fallow reads these comments; generic JSON tools may not.
+  "$schema": "./node_modules/fallow/schema.json",
+  "entry": [
+    "src/index.{js,jsx,mjs}",
+    "src/main.{js,jsx,mjs}",
+    "apps/gitwarp/test/**/*.{js,ts}",
+    "apps/gitwarp/blume.config.ts",
+    "apps/gitwarp/docs/**/*.{md,mdx}",
+    "apps/gitwarp/theme.css"
+  ],
+  "ignoreDependencies": [
+    "@astrojs/mdx",
+    "@tailwindcss/typography",
+    "@tailwindcss/vite"
+  ],
+  "workspaces": {
+    "patterns": [
+      "apps/*",
+      "packages/*"
+    ]
+  },
+  "duplicates": {
+    // Hide pair-only clones; focus on widespread copy-paste
+    // worth refactoring. Lower to 2 to report every duplicate pair.
+    "minOccurrences": 3
+    // Common additions (uncomment to enable):
+    // "ignore": [
+    //   "**/lib/**",          // for repos that publish transpiled output to lib/
+    //   "**/legacy/**",       // for repos with legacy-build artifacts
+    //   "**/__generated__/**", // Relay, GraphQL Code Generator
+    //   "**/generated/**"     // OpenAPI, Protobuf codegen
+    // ]
+  },
+  "rules": {},
+  "regression": {
+    "baseline":     {
+      "totalIssues": 19,
+      "unusedFiles": 15,
+      "unusedExports": 1,
+      "unusedTypes": 0,
+      "unusedDependencies": 0,
+      "unusedDevDependencies": 3,
+      "unusedOptionalDependencies": 0,
+      "unusedEnumMembers": 0,
+      "unusedClassMembers": 0,
+      "unresolvedImports": 0,
+      "unlistedDependencies": 0,
+      "duplicateExports": 0,
+      "circularDependencies": 0,
+      "reExportCycles": 0,
+      "typeOnlyDependencies": 0,
+      "testOnlyDependencies": 0,
+      "devDependenciesInProduction": 0,
+      "boundaryViolations": 0,
+      "boundaryCoverageViolations": 0,
+      "boundaryCallViolations": 0,
+      "policyViolations": 0
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { describe, it } from 'node:test';
+import { describe, it } from 'bun:test';
 import assert from 'node:assert/strict';
 import { parseGithubUrl } from '../src/parser.js';
 import {
@@ -17,6 +17,7 @@ function createRandom(seed) {
   };
 }
 
+// fallow-ignore-next-line complexity
 function generateRandomOptions(rand) {
   const lineStartOpt =
     rand() < 0.3
@@ -48,6 +49,7 @@ describe('Interactive Cards Property & DOM Invariant Tests', () => {
   describe('Property Invariant 1: buildDeepLinkerUrl', () => {
     const DEEP_LINKER_REGEX = /^https:\/\/github\.com\/[^\/]+\/[^\/]+\/blob\/[^\/]+\/.+/;
 
+    // fallow-ignore-next-line complexity
     it('always produces a valid GitHub blob URL matching pattern for valid File context (1000 iterations)', () => {
       const rand = createRandom(42);
       const owners = ['octocat', 'facebook', 'torvalds', 'microsoft', 'a-b_c'];
@@ -161,6 +163,7 @@ describe('Interactive Cards Property & DOM Invariant Tests', () => {
     const COMMIT_FEED_REGEX =
       /^https:\/\/github\.com\/[^\/]+\/[^\/]+\/commits(\/.*)?(\?author=.*)?/;
 
+    // fallow-ignore-next-line complexity
     it('buildTimeMachineUrl produces valid URLs for all Repo and File contexts (1000 iterations)', () => {
       const rand = createRandom(101);
       const contexts = ['Repo', 'File'];
@@ -209,6 +212,7 @@ describe('Interactive Cards Property & DOM Invariant Tests', () => {
       }
     });
 
+    // fallow-ignore-next-line complexity
     it('buildCommitFeedUrl produces valid URLs for all Repo and File contexts (1000 iterations)', () => {
       const rand = createRandom(202);
       const contexts = ['Repo', 'File'];
@@ -324,6 +328,7 @@ describe('Interactive Cards Property & DOM Invariant Tests', () => {
             const list = eventListeners[evt] || [];
             list.forEach((fn) => fn({ currentTarget: mockNode }));
           },
+          // fallow-ignore-next-line complexity
           querySelector(sel) {
             if (sel.startsWith('#')) {
               const targetId = sel.slice(1);
@@ -353,6 +358,7 @@ describe('Interactive Cards Property & DOM Invariant Tests', () => {
             const results = [];
             findAllChildren(
               mockNode,
+              // fallow-ignore-next-line complexity
               (node) => {
                 if (sel.startsWith('.')) {
                   return node.className && node.className.includes(sel.slice(1));

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.13](https://github.com/oldmanumby/gitwarp/compare/v1.3.12...v1.3.13) (2026-07-23)
+
+
+### Bug Fixes
+
+* update github repo link in footer to gitwarp ([7211273](https://github.com/oldmanumby/gitwarp/commit/72112735dd3694770fc2f19afd4a36bb99bf1fb0))
+
 ### [1.3.12](https://github.com/oldmanumby/gitwarp/compare/v1.3.11...v1.3.12) (2026-07-23)
 
 
