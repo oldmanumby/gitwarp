@@ -19,31 +19,43 @@ Based on the [Hyperautomation Labs Cheat Sheet](https://hyperautomationlabs.co)
 
 ## Setup & Installation
 
-This project is built using vanilla JavaScript and Vite.
+This project is built using a modern **Bun (Rust)** Monorepo architecture and is deployed globally via **Cloudflare Pages**. It utilizes strict local defensive tooling (Husky, Fallow, ESLint, Secretlint) to enforce code quality before pushing.
 
 **1. Clone the repository and navigate into it:**
 
 ```bash
-cd APP-GitWarp
+git clone https://github.com/oldmanumby/gitwarp.git
+cd gitwarp
 ```
 
-**2. Install dependencies:**
+**2. Install dependencies (using Bun):**
 
 ```bash
-npm install
+bun install
 ```
 
 **3. Run the development server:**
+The frontend app is located in the `apps/gitwarp` workspace.
 
 ```bash
-npm run dev
+cd apps/gitwarp
+bun run dev
 ```
 
 **4. Build for production:**
 
 ```bash
-npm run build
+cd apps/gitwarp
+bun run build
 ```
+
+## Developer Workflow
+
+- **Commit & Push:** Always commit using conventional commits (e.g., `feat:`, `fix:`). The local pre-commit hooks will automatically lint and check for dead code/secrets.
+- **Syncing Branches:** This repo uses GitHub Actions and **Release Please** to automate semantic versioning on the `main` branch. If you are developing on a `dev` branch, you can instantly pull down the latest `main` releases by running:
+  ```bash
+  bun run sync
+  ```
 
 ## License
 
