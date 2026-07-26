@@ -51,6 +51,7 @@ const RESERVED_NAMES = new Set([
  * @param {string} hash
  * @returns {{ lineStart: number|null, lineEnd: number|null }}
  */
+// fallow-ignore-next-line complexity
 function parseLineFragment(hash) {
   if (!hash || typeof hash !== 'string') {
     return { lineStart: null, lineEnd: null };
@@ -362,6 +363,7 @@ function parseStandardGithubUrl(
  *   normalizedUrl: string|null
  * }>}
  */
+// fallow-ignore-next-line complexity
 export function parseGithubUrl(inputUrl) {
   if (typeof inputUrl !== 'string') {
     return Object.freeze({

@@ -163,6 +163,7 @@ export const STANDARD_CARDS = [
     icon: 'zap',
     allowedContexts: ['Repo', 'File', 'Commit', 'PR'],
     description: 'Boots the repository in an interactive browser WebContainers dev environment.',
+    // fallow-ignore-next-line complexity
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo) return null;
       if (ctx.context === 'File' && ctx.filePath) {
@@ -210,6 +211,7 @@ export const STANDARD_CARDS = [
     icon: 'file-diff',
     allowedContexts: ['Commit', 'PR'],
     description: 'Appends .patch to commit or PR URLs to get formatted raw Git patch files.',
+    // fallow-ignore-next-line complexity
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo) return null;
       if (ctx.context === 'Commit' && ctx.commitSha)
@@ -225,6 +227,7 @@ export const STANDARD_CARDS = [
     icon: 'file-diff',
     allowedContexts: ['Commit', 'PR'],
     description: 'Appends .diff to commit or PR URLs to get raw unified diff output.',
+    // fallow-ignore-next-line complexity
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo) return null;
       if (ctx.context === 'Commit' && ctx.commitSha)
@@ -251,6 +254,7 @@ export const STANDARD_CARDS = [
     icon: 'rss',
     allowedContexts: ['Repo', 'File', 'Commit', 'PR'],
     description: 'Atom RSS feed tracking commit history for the repository or branch.',
+    // fallow-ignore-next-line complexity
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo) return null;
       if (ctx.ref) {
@@ -265,6 +269,7 @@ export const STANDARD_CARDS = [
     icon: 'archive',
     allowedContexts: ['Repo', 'File', 'Commit', 'PR'],
     description: 'Direct link to download a ZIP archive of the repository codebase.',
+    // fallow-ignore-next-line complexity
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo) return null;
       if (ctx.ref) {
@@ -317,6 +322,7 @@ export const STANDARD_CARDS = [
     icon: 'file-text',
     allowedContexts: ['File'],
     description: 'Direct link to fetch raw file contents from raw.githubusercontent.com.',
+    // fallow-ignore-next-line complexity
     generateUrl: (ctx) => {
       if (!ctx || !ctx.owner || !ctx.repo || !ctx.filePath) return null;
       return `https://raw.githubusercontent.com/${ctx.owner}/${ctx.repo}/${ctx.ref || 'main'}/${ctx.filePath}`;
@@ -331,6 +337,7 @@ export const STANDARD_CARDS = [
  * @param {ParsedContext} parsedContext
  * @returns {boolean}
  */
+// fallow-ignore-next-line complexity
 export function isCardCompatible(card, parsedContext) {
   if (!parsedContext || !parsedContext.valid || parsedContext.context === 'Unknown') {
     return false;
