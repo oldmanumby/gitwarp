@@ -6,7 +6,8 @@
     "packages/*"
   ],
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "sync": "git fetch && git merge origin/main && git push origin dev"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
