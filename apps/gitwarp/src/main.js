@@ -36,6 +36,7 @@ import {
   Archive,
   Terminal,
   Box,
+  ExternalLink,
 } from 'lucide';
 import { parseGithubUrl } from './parser.js';
 import { STANDARD_CARDS, isCardCompatible, getCardUrl } from './cards.js';
@@ -90,6 +91,7 @@ function safeCreateIcons() {
         Archive,
         Terminal,
         Box,
+        ExternalLink,
       },
     });
   } catch {
@@ -222,6 +224,9 @@ function renderStandardCard(cardId, parsedContext, cardsGrid) {
         <a href="${escapeHtml(targetUrl)}" target="_blank" rel="noopener noreferrer" class="card-link" title="${escapeHtml(targetUrl)}">
           ${escapeHtml(targetUrl.replace('https://', ''))}
         </a>
+        <button class="go-btn" data-url="${escapeHtml(targetUrl)}" aria-label="Open ${escapeHtml(card.name)} link">
+          <i data-lucide="external-link" style="width: 16px; height: 16px;"></i>
+        </button>
         <button class="copy-btn" data-url="${escapeHtml(targetUrl)}" aria-label="Copy ${escapeHtml(card.name)} link">
           <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
         </button>
@@ -236,6 +241,9 @@ function renderStandardCard(cardId, parsedContext, cardsGrid) {
       <h3 class="card-title">${escapeHtml(card.name)}</h3>
       <div class="card-link-container" style="opacity: 0.5;">
         <span class="card-link" style="color: var(--color-error); font-style: italic;">Requires ${escapeHtml(card.allowedContexts.join('/'))} context</span>
+        <button class="go-btn" data-url="" disabled aria-label="Open ${escapeHtml(card.name)} link">
+          <i data-lucide="external-link" style="width: 16px; height: 16px;"></i>
+        </button>
         <button class="copy-btn" data-url="" disabled aria-label="Copy ${escapeHtml(card.name)} link">
           <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
         </button>
@@ -294,24 +302,30 @@ if (clearBtn) {
   });
 }
 
-// Global Copy Event Delegation for Toast Notifications
+// Global Copy and Go Event Delegation
 // fallow-ignore-next-line complexity
 document.addEventListener('click', (e) => {
-  const btn = e.target.closest('.copy-btn');
-  if (!btn || btn.hasAttribute('disabled')) return;
-  const url = btn.getAttribute('data-url');
-  if (url) {
-    if (typeof navigator !== 'undefined' && navigator.clipboard) {
-      navigator.clipboard
-        .writeText(url)
-        .then(() => {
-          showToast();
-        })
-        .catch(() => {
-          showToast();
-        });
-    } else {
-      showToast();
+  const copyBtn = e.target.closest('.copy-btn');
+  if (copyBtn && !copyBtn.hasAttribute('disabled')) {
+    const url = copyBtn.getAttribute('data-url');
+    if (url) {
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        navigator.clipboard
+          .writeText(url)
+          .then(() => showToast())
+          .catch(() => showToast());
+      } else {
+        showToast();
+      }
+    }
+    return;
+  }
+
+  const goBtn = e.target.closest('.go-btn');
+  if (goBtn && !goBtn.hasAttribute('disabled')) {
+    const url = goBtn.getAttribute('data-url');
+    if (url) {
+      window.open(url, '_blank');
     }
   }
 });

@@ -281,7 +281,8 @@ a:hover {
   margin-top: auto;
 }
 
-.copy-btn {
+.copy-btn,
+.go-btn {
   background: none;
   border: none;
   color: var(--color-muted);
@@ -293,7 +294,8 @@ a:hover {
   justify-content: center;
 }
 
-.copy-btn:hover {
+.copy-btn:hover,
+.go-btn:hover {
   color: var(--text-body);
 }
 

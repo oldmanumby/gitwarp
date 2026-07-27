@@ -302,22 +302,28 @@ export function buildCommitFeedUrl(parsedContext, options = {}) {
 }
 
 /**
- * Helper to update a link and copy button UI.
+ * Helper to update a link, copy button, and go button UI.
  * @param {string|null} url
  * @param {HTMLAnchorElement} linkEl
- * @param {HTMLButtonElement} btnEl
+ * @param {HTMLButtonElement} copyBtnEl
+ * @param {HTMLButtonElement} goBtnEl
  */
 // fallow-ignore-next-line complexity
-function updateLinkUI(url, linkEl, btnEl) {
+function updateLinkUI(url, linkEl, copyBtnEl, goBtnEl) {
   if (linkEl) {
     linkEl.href = url || '#';
     linkEl.textContent = url ? url.replace('https://', '') : 'N/A';
     linkEl.title = url || '';
   }
-  if (btnEl) {
-    btnEl.setAttribute('data-url', url || '');
-    if (url) btnEl.removeAttribute('disabled');
-    else btnEl.setAttribute('disabled', 'true');
+  if (copyBtnEl) {
+    copyBtnEl.setAttribute('data-url', url || '');
+    if (url) copyBtnEl.removeAttribute('disabled');
+    else copyBtnEl.setAttribute('disabled', 'true');
+  }
+  if (goBtnEl) {
+    goBtnEl.setAttribute('data-url', url || '');
+    if (url) goBtnEl.removeAttribute('disabled');
+    else goBtnEl.setAttribute('disabled', 'true');
   }
 }
 
@@ -406,6 +412,9 @@ export function renderInteractiveCards(containerEl, parsedContext) {
           <a href="${escapeHtml(initialDeepUrl || '#')}" target="_blank" rel="noopener noreferrer" class="card-link" id="deep-linker-url" title="${escapeHtml(initialDeepUrl || '')}">
             ${initialDeepUrl ? escapeHtml(initialDeepUrl.replace('https://', '')) : 'N/A'}
           </a>
+          <button class="go-btn" data-url="${escapeHtml(initialDeepUrl || '')}" aria-label="Open Deep Linker link" ${initialDeepUrl ? '' : 'disabled'}>
+            <i data-lucide="external-link" style="width: 16px; height: 16px;"></i>
+          </button>
           <button class="copy-btn" data-url="${escapeHtml(initialDeepUrl || '')}" aria-label="Copy Deep Linker link" ${initialDeepUrl ? '' : 'disabled'}>
             <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
           </button>
@@ -473,6 +482,9 @@ export function renderInteractiveCards(containerEl, parsedContext) {
           <a href="${escapeHtml(initialTimeUrl || '#')}" target="_blank" rel="noopener noreferrer" class="card-link" id="time-machine-url" title="${escapeHtml(initialTimeUrl || '')}">
             ${initialTimeUrl ? escapeHtml(initialTimeUrl.replace('https://', '')) : 'N/A'}
           </a>
+          <button class="go-btn" data-url="${escapeHtml(initialTimeUrl || '')}" aria-label="Open Time Machine link" ${initialTimeUrl ? '' : 'disabled'}>
+            <i data-lucide="external-link" style="width: 16px; height: 16px;"></i>
+          </button>
           <button class="copy-btn" data-url="${escapeHtml(initialTimeUrl || '')}" aria-label="Copy Time Machine link" ${initialTimeUrl ? '' : 'disabled'}>
             <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
           </button>
@@ -512,6 +524,9 @@ export function renderInteractiveCards(containerEl, parsedContext) {
           <a href="${escapeHtml(initialCommitUrl || '#')}" target="_blank" rel="noopener noreferrer" class="card-link" id="commit-feed-url" title="${escapeHtml(initialCommitUrl || '')}">
             ${initialCommitUrl ? escapeHtml(initialCommitUrl.replace('https://', '')) : 'N/A'}
           </a>
+          <button class="go-btn" data-url="${escapeHtml(initialCommitUrl || '')}" aria-label="Open Commit Feed link" ${initialCommitUrl ? '' : 'disabled'}>
+            <i data-lucide="external-link" style="width: 16px; height: 16px;"></i>
+          </button>
           <button class="copy-btn" data-url="${escapeHtml(initialCommitUrl || '')}" aria-label="Copy Commit Feed link" ${initialCommitUrl ? '' : 'disabled'}>
             <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
           </button>
@@ -538,6 +553,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
     const deepPlain = containerEl.querySelector('#deep-plain');
     const deepLink = containerEl.querySelector('#deep-linker-url');
     const deepBtn = deepLink?.parentElement?.querySelector('.copy-btn');
+    const deepGoBtn = deepLink?.parentElement?.querySelector('.go-btn');
 
     const updateDeepLinker = () => {
       const url = buildDeepLinkerUrl(parsedContext, {
@@ -545,7 +561,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
         lineEnd: deepEnd ? deepEnd.value : undefined,
         plainToggle: deepPlain ? deepPlain.checked : false,
       });
-      updateLinkUI(url, deepLink, deepBtn);
+      updateLinkUI(url, deepLink, deepBtn, deepGoBtn);
     };
 
     [deepStart, deepEnd, deepPlain].forEach((el) => {
@@ -570,6 +586,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
 
     const timeLink = containerEl.querySelector('#time-machine-url');
     const timeBtn = timeLink?.parentElement?.querySelector('.copy-btn');
+    const timeGoBtn = timeLink?.parentElement?.querySelector('.go-btn');
 
     // fallow-ignore-next-line complexity
     const updateTimeMachine = () => {
@@ -586,7 +603,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
         includeFilePath: includePath ? includePath.checked : false,
       });
 
-      updateLinkUI(url, timeLink, timeBtn);
+      updateLinkUI(url, timeLink, timeBtn, timeGoBtn);
     };
 
     [baseRef, compareMode, compareRef, timeframe, customDate, includePath].forEach((el) => {
@@ -603,6 +620,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
     const commitPath = containerEl.querySelector('#commit-path');
     const commitLink = containerEl.querySelector('#commit-feed-url');
     const commitBtn = commitLink?.parentElement?.querySelector('.copy-btn');
+    const commitGoBtn = commitLink?.parentElement?.querySelector('.go-btn');
 
     const updateCommitFeed = () => {
       const url = buildCommitFeedUrl(parsedContext, {
@@ -611,7 +629,7 @@ export function renderInteractiveCards(containerEl, parsedContext) {
         pathInput: commitPath ? commitPath.value : undefined,
       });
 
-      updateLinkUI(url, commitLink, commitBtn);
+      updateLinkUI(url, commitLink, commitBtn, commitGoBtn);
     };
 
     [commitRef, commitAuthor, commitPath].forEach((el) => {
