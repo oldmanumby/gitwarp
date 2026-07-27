@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/oldmanumby/gitwarp/compare/v1.3.14...v1.4.0) (2026-07-27)
+
+
+### Features
+
+* added new gitreverse card ([a3637c3](https://github.com/oldmanumby/gitwarp/commit/a3637c32a4db6bcbc089fcf2e178ad4ab167f8fd))
+
+
+### Bug Fixes
+
+* remove redundant fallback message for interactive tools ([daf406c](https://github.com/oldmanumby/gitwarp/commit/daf406c4f3698faaf200965725471a5db1a88d00))
+
 ## [1.3.14](https://github.com/oldmanumby/gitwarp/compare/v1.3.13...v1.3.14) (2026-07-26)
 
 
