@@ -1,4 +1,6 @@
 ---
+name: "GitWarp"
+version: "1.0"
 colors:
   primary: 'oklch(0.6 0.14 255)'
   bg-site: 'oklch(0.17 0.02 255)'
@@ -12,11 +14,28 @@ colors:
   color-success: 'oklch(0.6 0.15 150)'
   color-error: 'oklch(0.6 0.18 25)'
 typography:
-  font-body: "'Geist', system-ui, -apple-system, sans-serif"
-  font-mono: "'Geist Mono', ui-monospace, SFMono-Regular, monospace"
+  font-body:
+    fontFamily: "'Geist', system-ui, -apple-system, sans-serif"
+  font-mono:
+    fontFamily: "'Geist Mono', ui-monospace, SFMono-Regular, monospace"
+rounded:
+  sm: 4px
+  md: 8px
+  lg: 12px
+spacing:
+  sm: 8px
+  md: 16px
+  lg: 24px
+  xl: 32px
+omitted:
+  - Layout
+  - Elevation & Depth
+  - Shapes
+  - Components
+  - Do's and Don'ts
 ---
 
-# GitWarp Design System
+# Overview
 
 This document is the single source of truth for the GitWarp design system. It contains all core design tokens used in the application.
 
@@ -26,7 +45,7 @@ This document is the single source of truth for the GitWarp design system. It co
 - **Glassmorphism**: Surfaces and cards use subtle blurs and semi-transparency.
 - **Color Space**: All colors use OKLCH for predictable, perceptually uniform gradients and states.
 
-## Colors
+# Colors
 
 The application relies strictly on the following OKLCH palette defined in `src/style.css`:
 
@@ -36,7 +55,7 @@ The application relies strictly on the following OKLCH palette defined in `src/s
 - **Text (Body)**: `oklch(1 0 0)` — Pure white for maximum contrast on deep backgrounds.
 - **Muted**: `oklch(0.6 0.015 255)` — Low-contrast text for secondary information.
 
-## Typography
+# Typography
 
 - **Body**: `Geist, system-ui, -apple-system, sans-serif` — Using Geist for modern readability, falling back to host OS native sans-serif.
 - **Mono**: `Geist Mono, ui-monospace, SFMono-Regular, monospace` — Using Geist Mono for code snippets and technical text.
