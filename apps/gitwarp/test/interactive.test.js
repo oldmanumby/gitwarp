@@ -336,11 +336,12 @@ describe('Interactive Cards Component (src/interactive.js)', () => {
       });
     });
 
-    it('renders fallback notice into container for invalid context', () => {
+    it('clears container for invalid context', () => {
       const mockContainer = createMockElement();
+      mockContainer.innerHTML = 'old text';
       const invalidCtx = parseGithubUrl('invalid-url');
       renderInteractiveCards(mockContainer, invalidCtx);
-      assert.ok(mockContainer.innerHTML.includes('interactive-fallback'));
+      assert.equal(mockContainer.innerHTML, '');
     });
 
     it('renders all three interactive cards for valid File context', () => {

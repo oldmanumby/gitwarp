@@ -467,13 +467,12 @@ describe('Interactive Cards Property & DOM Invariant Tests', () => {
       return containerNode;
     }
 
-    it('renders fallback UI when given invalid or missing parsedContext', () => {
+    it('clears the container when given invalid or missing parsedContext', () => {
       const container = createFullMockDOM();
+      container.innerHTML = '<div id="old">old</div>';
       renderInteractiveCards(container, null);
-
-      assert.ok(
-        container.innerHTML.includes('Enter a valid GitHub URL to unlock interactive tools.')
-      );
+      
+      assert.equal(container.innerHTML, '');
     });
 
     it('renders all 3 cards with proper active/disabled state for File context', () => {
