@@ -36,3 +36,6 @@ yarn-error.log*
 .fallow
 .agents
 .blume/
+
+# Dev Notes
+.notes/

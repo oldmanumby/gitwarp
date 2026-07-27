@@ -66,6 +66,14 @@ function generateDomainUrl(domain, ctx, prefix = '') {
  */
 export const STANDARD_CARDS = [
   {
+    id: 'gitreverse',
+    name: 'gitreverse.com',
+    icon: 'history',
+    allowedContexts: ['Repo', 'File', 'Commit', 'PR'],
+    description: 'Reverse engineer any repo into its original prompt.',
+    generateUrl: (ctx) => generateDomainUrl('gitreverse.com', ctx),
+  },
+  {
     id: 'boltnew',
     name: 'bolt.new',
     icon: 'bot',
