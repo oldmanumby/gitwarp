@@ -202,11 +202,7 @@ describe('Empirical UI Stress Test Harness', () => {
           'Please enter a valid GitHub URL (e.g., https://github.com/owner/repo)'
         );
         assert.ok(cardsGrid.innerHTML.includes('Enter a valid GitHub URL above'));
-        assert.ok(
-          interactiveContainer.innerHTML.includes(
-            'Enter a valid GitHub URL to unlock interactive tools'
-          )
-        );
+        assert.equal(interactiveContainer.innerHTML, '');
       }
     });
   });

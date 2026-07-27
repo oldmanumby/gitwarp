@@ -189,11 +189,7 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
         'Please enter a valid GitHub URL (e.g., https://github.com/owner/repo)'
       );
       assert.ok(cardsGrid.innerHTML.includes('Enter a valid GitHub URL above'));
-      assert.ok(
-        interactiveContainer.innerHTML.includes(
-          'Enter a valid GitHub URL to unlock interactive tools'
-        )
-      );
+      assert.equal(interactiveContainer.innerHTML, '');
 
       // Step 4: Transition to empty string via Clear Button click
       clearBtn.dispatchEvent('click');
@@ -205,11 +201,7 @@ describe('UI Integration Adversarial Tests (src/main.js & index.html)', () => {
       assert.ok(contextBadge.classList.contains('active'));
       assert.equal(errorMessage.textContent, '');
       assert.ok(cardsGrid.innerHTML.includes('Enter a valid GitHub URL above'));
-      assert.ok(
-        interactiveContainer.innerHTML.includes(
-          'Enter a valid GitHub URL to unlock interactive tools'
-        )
-      );
+      assert.equal(interactiveContainer.innerHTML, '');
 
       // Step 5: Pasting raw domain URL
       repoInput.value = 'https://raw.githubusercontent.com/facebook/react/main/src/index.js';

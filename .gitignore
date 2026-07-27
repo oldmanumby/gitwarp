@@ -36,3 +36,9 @@ yarn-error.log*
 .fallow
 .agents
 .blume/
+
+# Dev Notes
+.notes/
+
+# CodeGraph Index
+.codegraph/

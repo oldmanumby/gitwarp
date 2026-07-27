@@ -162,7 +162,7 @@ function renderStandardCards(parsedContext) {
     },
     {
       title: 'AI & LLM Utilities',
-      ids: ['boltnew', 'gitingest', 'gitmcp', 'deepwiki', 'gitpodcast'],
+      ids: ['gitreverse', 'boltnew', 'gitingest', 'gitmcp', 'deepwiki', 'gitpodcast'],
     },
     {
       title: 'Analytics & Visualization',
