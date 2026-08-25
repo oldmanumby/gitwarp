@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/oldmanumby/gitwarp/compare/v1.4.0...v1.5.0) (2026-08-25)
+
+
+### Features
+
+* add gitscore.live card to standard tools ([870430e](https://github.com/oldmanumby/gitwarp/commit/870430ec2533594b281b721aec4788dcf95506b3))
+
 ## [1.4.0](https://github.com/oldmanumby/gitwarp/compare/v1.3.14...v1.4.0) (2026-07-27)
 
 
