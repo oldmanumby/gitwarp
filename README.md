@@ -8,7 +8,7 @@ Based on the [Hyperautomation Labs Cheat Sheet](https://hyperautomationlabs.co)
 
 ## Features
 
-- **27 Interactive Swaps:** Generate URLs for services like gitingest, github.dev, bolt.new, gitmcp, gitreverse, and more with one click.
+- **28 Interactive Swaps:** Generate URLs for services like gitingest, github.dev, bolt.new, gitmcp, gitreverse, and more with one click.
 - **Context-Aware Engine:** Paste any GitHub URL (User, Repo, File, Commit, PR). The app automatically parses the context and highlights only the tools that are compatible with your URL.
 - **Advanced Interactive Tools:**
   - **Deep Linker:** Target precise code line ranges (L10-L20) and toggle raw views.

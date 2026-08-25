@@ -168,7 +168,7 @@ function renderStandardCards(parsedContext) {
     },
     {
       title: 'Analytics & Visualization',
-      ids: ['gitdiagram', 'githubgg', 'starhistory'],
+      ids: ['gitscore', 'gitdiagram', 'githubgg', 'starhistory'],
     },
     {
       title: 'Git Operations & Raw Data',
