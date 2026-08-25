@@ -192,6 +192,17 @@ export const STANDARD_CARDS = [
     },
   },
   {
+    id: 'gitscore',
+    name: 'gitscore.live',
+    icon: 'activity',
+    allowedContexts: ['User', 'Repo', 'File', 'Commit', 'PR'],
+    description: 'Calculate the true GitHub score and open-source impact for this developer.',
+    generateUrl: (ctx) => {
+      if (!ctx || !ctx.owner) return null;
+      return `https://www.gitscore.live/${ctx.owner}`;
+    },
+  },
+  {
     id: 'keys',
     name: '.keys (SSH Public Keys)',
     icon: 'key',
