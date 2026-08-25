@@ -263,7 +263,7 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
 
       assert.doesNotThrow(() => {
         const compatible = getCompatibleCards(nullProtoCtx);
-        assert.equal(compatible.length, 23);
+        assert.equal(compatible.length, 22);
         const boltCard = STANDARD_CARDS.find((c) => c.id === 'boltnew');
         assert.equal(isCardCompatible(boltCard, nullProtoCtx), true);
         assert.equal(
@@ -364,7 +364,7 @@ describe('Adversarial & Stress Tests for src/cards.js', () => {
     });
   });
 
-  describe('4. Exhaustive Matrix of All 26 Standard Cards', () => {
+  describe('4. Exhaustive Matrix of All 25 Standard Cards', () => {
     const sampleContexts = [
       {
         id: 'user',

@@ -5,13 +5,12 @@ import { parseGithubUrl } from '../src/parser.js';
 
 describe('Standard Trick Cards & Compatibility System', () => {
   describe('Catalog Completeness', () => {
-    it('contains exactly 26 standard cards', () => {
-      assert.equal(STANDARD_CARDS.length, 26);
+    it('contains exactly 25 standard cards', () => {
+      assert.equal(STANDARD_CARDS.length, 25);
     });
 
-    it('has all required 11 existing and 15 new card IDs', () => {
+    it('has all required 11 existing and 14 new card IDs', () => {
       const expectedIds = [
-        'reposcan',
         'gitscore',
         'gitreverse',
         'boltnew',
@@ -90,9 +89,9 @@ describe('Standard Trick Cards & Compatibility System', () => {
         assert.equal(getCardUrl(gpgCard, userCtx), 'https://github.com/torvalds.gpg');
       });
 
-      it('the other 23 repo/file/commit/PR cards are incompatible with User context', () => {
+      it('the other 22 repo/file/commit/PR cards are incompatible with User context', () => {
         const incompatibleCards = STANDARD_CARDS.filter((c) => c.id !== 'keys' && c.id !== 'gpg' && c.id !== 'gitscore');
-        assert.equal(incompatibleCards.length, 23);
+        assert.equal(incompatibleCards.length, 22);
         for (const card of incompatibleCards) {
           assert.equal(
             isCardCompatible(card, userCtx),
@@ -118,9 +117,9 @@ describe('Standard Trick Cards & Compatibility System', () => {
         assert.equal(repoCtx.repo, 'react');
       });
 
-      it('23 cards are compatible with Repo context', () => {
+      it('22 cards are compatible with Repo context', () => {
         const compatibleCards = getCompatibleCards(repoCtx);
-        assert.equal(compatibleCards.length, 23);
+        assert.equal(compatibleCards.length, 22);
       });
 
       it('.patch, .diff, and raw_file are incompatible with Repo context', () => {
@@ -283,7 +282,7 @@ describe('Standard Trick Cards & Compatibility System', () => {
     describe('Unknown / Invalid Context', () => {
       const unknownCtx = parseGithubUrl('invalid-url-here');
 
-      it('returns isCardCompatible === false for all 26 cards', () => {
+      it('returns isCardCompatible === false for all 25 cards', () => {
         assert.equal(unknownCtx.valid, false);
         assert.equal(unknownCtx.context, 'Unknown');
 
@@ -312,12 +311,11 @@ describe('Standard Trick Cards & Compatibility System', () => {
     });
   });
 
-  describe('URL Generation Accuracy for All 26 Cards', () => {
+  describe('URL Generation Accuracy for All 25 Cards', () => {
     const repoCtx = parseGithubUrl('https://github.com/octocat/Hello-World');
 
     it('generates accurate URLs for repo context', () => {
       const expected = {
-        reposcan: 'https://reposcan.space/scan?q=octocat/Hello-World',
         gitscore: 'https://www.gitscore.live/octocat',
         gitreverse: 'https://gitreverse.com/octocat/Hello-World',
         boltnew: 'https://bolt.new/github.com/octocat/Hello-World',
